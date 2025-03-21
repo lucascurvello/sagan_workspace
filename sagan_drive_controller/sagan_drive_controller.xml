@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<library path="sagan_drive_controller">
+  <class name="sagan_drive_controller/SaganDriverController"
+         type="sagan_drive_controller::SaganDriverController"
+         base_class_type="controller_interface::ControllerInterface">
+    <description>
+      Sagan Drive Controller for ROS2-based systems.
+    </description>
+  </class>
+</library>

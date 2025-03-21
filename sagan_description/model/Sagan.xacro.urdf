@@ -1,0 +1,595 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- This URDF was automatically created by SolidWorks to URDF Exporter! Originally created by Stephen Brawner (brawner@gmail.com) 
+     Commit Version: 1.6.0-4-g7f85cfe  Build Version: 1.6.7995.38578
+     For more information, please see http://wiki.ros.org/sw_urdf_exporter -->
+<robot name="Sagan" xmlns:xacro="http://ros.org/wiki/xacro">
+  
+  <xacro:include filename="$(find sagan_description)/model/Sagan.gazebo"/>
+  <xacro:include filename="$(find sagan_description)/model/ros2_control.xacro"/>
+
+
+  <!--<link name="base_footprint"></link>
+    <joint name="base_link_joint" type="fixed">
+      <parent link="base_footprint"/>
+      <child link="base_link"/>
+    </joint>
+    -->
+
+  <link name="base_footprint"></link>
+  <joint name="base_footprint_joint" type="fixed">
+    <origin xyz="0 0 0.017" rpy="-1.5708 0 0" />
+    <parent link="base_footprint" />
+    <child link="base_link" />
+ </joint>
+  
+  <link
+    name="base_link">
+    <inertial>
+      <origin
+        xyz="-0.011810141740808 -0.00349722852728176 0.0473427278603085"
+        rpy="0 0 0" />
+      <mass
+        value="1.64102297043224" />
+      <inertia
+        ixx="0.0079358086776947"
+        ixy="-2.29898071281015E-05"
+        ixz="0.000873942012135638"
+        iyy="0.0134420983907512"
+        iyz="1.22105797431378E-05"
+        izz="0.0202753001007571" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="file://$(find sagan_description)/model/meshes/base_link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.752941176470588 0.752941176470588 0.752941176470588 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="file://$(find sagan_description)/model/meshes/base_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <link
+    name="Left_arm">
+    <inertial>
+      <origin
+        xyz="-4.91680069401867E-07 -0.0215734283000623 0.030428242121529"
+        rpy="0 0 0" />
+      <mass
+        value="0.351441910668664" />
+      <inertia
+        ixx="0.000175345646863428"
+        ixy="-1.7813545791169E-09"
+        ixz="-1.62285103479538E-09"
+        iyy="0.000368001853138293"
+        iyz="3.61191220584774E-05"
+        izz="0.000308905475527299" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="file://$(find sagan_description)/model/meshes/Left_arm.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.752941176470588 0.752941176470588 0.752941176470588 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="file://$(find sagan_description)/model/meshes/Left_arm.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="Left_arm_joint"
+    type="fixed">
+    <origin
+      xyz="-0.015 -0.022 -0.1425"
+      rpy="3.1416 0 0" />
+    <parent
+      link="base_link" />
+    <child
+      link="Left_arm" />
+    <axis
+      xyz="0 0 0" />
+  </joint>
+  <link
+    name="LF_stering_arm">
+    <inertial>
+      <origin
+        xyz="-0.00804072955706647 -0.106038395307323 0.00274977981157196"
+        rpy="0 0 0" />
+      <mass
+        value="0.457316704111482" />
+      <inertia
+        ixx="0.00107939387445048"
+        ixy="-5.88026814841312E-06"
+        ixz="-8.44777124047921E-06"
+        iyy="0.000702333595947727"
+        iyz="-6.92236230546448E-06"
+        izz="0.000699127155841569" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="file://$(find sagan_description)/model/meshes/LF_stering_arm.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.501960784313725 0.501960784313725 0.501960784313725 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="file://$(find sagan_description)/model/meshes/LF_stering_arm.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="LF_stering_arm_joint"
+    type="continuous">
+    <origin
+      xyz="-0.185 -0.031 0.04225"
+      rpy="0 -1.5708 0" />
+    <parent
+      link="Left_arm" />
+    <child
+      link="LF_stering_arm" />
+    <axis
+      xyz="0 1 0" />
+  </joint>
+  <link
+    name="LF_wheel">
+    <inertial>
+      <origin
+        xyz="3.09746851944182E-05 7.3094613101371E-05 -0.00572970837480286"
+        rpy="0 0 0" />
+      <mass
+        value="0.504199735680765" />
+      <inertia
+        ixx="0.000783880205929948"
+        ixy="2.01226383831894E-09"
+        ixz="3.50299796044178E-07"
+        iyy="0.000783890492868903"
+        iyz="8.25793804944639E-07"
+        izz="0.00117428659094037" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="file://$(find sagan_description)/model/meshes/LF_wheel.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.752941176470588 0.752941176470588 0.752941176470588 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="file://$(find sagan_description)/model/meshes/LF_wheel.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="LF_wheel_joint"
+    type="continuous">
+    <origin
+      xyz="0 -0.1325 0"
+      rpy="1.5708 -0.27463 -1.5708" />
+    <parent
+      link="LF_stering_arm" />
+    <child
+      link="LF_wheel" />
+    <axis
+      xyz="0 0 1" />
+  </joint>
+  <link
+    name="LR_stering_arm">
+    <inertial>
+      <origin
+        xyz="0.00804071716967378 -0.106038396919281 0.00274978112621285"
+        rpy="0 0 0" />
+      <mass
+        value="0.457316671284394" />
+      <inertia
+        ixx="0.00107939385640447"
+        ixy="5.88023069536254E-06"
+        ixz="8.44785009774513E-06"
+        iyy="0.000702333593444471"
+        iyz="-6.92236387321353E-06"
+        izz="0.000699127138546282" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="file://$(find sagan_description)/model/meshes/LR_stering_arm.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.501960784313725 0.501960784313725 0.501960784313725 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="file://$(find sagan_description)/model/meshes/LR_stering_arm.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="LR_stering_arm_joint"
+    type="continuous">
+    <origin
+      xyz="0.185 -0.031 0.04225"
+      rpy="0 1.5708 0" />
+    <parent
+      link="Left_arm" />
+    <child
+      link="LR_stering_arm" />
+    <axis
+      xyz="0 1 0" />
+  </joint>
+  <link
+    name="LR_wheel">
+    <inertial>
+      <origin
+        xyz="3.0974725421351E-05 7.30947612943567E-05 -0.00572970824386257"
+        rpy="0 0 0" />
+      <mass
+        value="0.504199729718972" />
+      <inertia
+        ixx="0.000783880202895659"
+        ixy="2.01039023766552E-09"
+        ixz="3.50300215103234E-07"
+        iyy="0.000783890487615817"
+        iyz="8.25795383820328E-07"
+        izz="0.00117428658587198" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="file://$(find sagan_description)/model/meshes/LR_wheel.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.752941176470588 0.752941176470588 0.752941176470588 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="file://$(find sagan_description)/model/meshes/LR_wheel.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="LR_wheel_joint"
+    type="continuous">
+    <origin
+      xyz="0 -0.1325 0"
+      rpy="-1.5708 -0.58509 -1.5708" />
+    <parent
+      link="LR_stering_arm" />
+    <child
+      link="LR_wheel" />
+    <axis
+      xyz="0 0 1" />
+  </joint>
+  <link
+    name="Right_arm">
+    <inertial>
+      <origin
+        xyz="-4.99004084572249E-07 -0.0215734369148283 0.0304282452153999"
+        rpy="0 0 0" />
+      <mass
+        value="0.351441923670602" />
+      <inertia
+        ixx="0.000175345733789824"
+        ixy="-1.77340464963269E-09"
+        ixz="-1.54958700577145E-09"
+        iyy="0.000368001964224144"
+        iyz="3.61191345471842E-05"
+        izz="0.000308905461159352" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="file://$(find sagan_description)/model/meshes/Right_arm.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.752941176470588 0.752941176470588 0.752941176470588 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="file://$(find sagan_description)/model/meshes/Right_arm.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="Right_arm_joint"
+    type="fixed">
+    <origin
+      xyz="-0.015 -0.022 0.143"
+      rpy="0 0 3.1416" />
+    <parent
+      link="base_link" />
+    <child
+      link="Right_arm" />
+    <axis
+      xyz="0 0 0" />
+  </joint>
+  <link
+    name="RF_stering_arm">
+    <inertial>
+      <origin
+        xyz="0.00804071712769167 -0.106038397059761 0.00274978119970537"
+        rpy="0 0 0" />
+      <mass
+        value="0.457316670820617" />
+      <inertia
+        ixx="0.00107939385625459"
+        ixy="5.88023119472766E-06"
+        ixz="8.44784884753844E-06"
+        iyy="0.000702333593373311"
+        iyz="-6.92236413867083E-06"
+        izz="0.000699127138390781" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="file://$(find sagan_description)/model/meshes/RF_stering_arm.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.501960784313725 0.501960784313725 0.501960784313725 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="file://$(find sagan_description)/model/meshes/RF_stering_arm.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="RF_stering_arm_joint"
+    type="continuous">
+    <origin
+      xyz="0.185 -0.031 0.04225"
+      rpy="3.1416 1.5708 3.1416" />
+    <parent
+      link="Right_arm" />
+    <child
+      link="RF_stering_arm" />
+    <axis
+      xyz="0 1 0" />
+  </joint>
+  <link
+    name="RF_wheel">
+    <inertial>
+      <origin
+        xyz="3.09746486688856E-05 7.30947746340888E-05 -0.00572970830710698"
+        rpy="0 0 0" />
+      <mass
+        value="0.504199732627693" />
+      <inertia
+        ixx="0.000783880202735922"
+        ixy="2.00980892579107E-09"
+        ixz="3.50299340077445E-07"
+        iyy="0.000783890489998166"
+        iyz="8.2579559371602E-07"
+        izz="0.00117428658659121" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="file://$(find sagan_description)/model/meshes/RF_wheel.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.752941176470588 0.752941176470588 0.752941176470588 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="file://$(find sagan_description)/model/meshes/RF_wheel.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="RF_wheel_joint"
+    type="continuous">
+    <origin
+      xyz="0 -0.1325 0"
+      rpy="1.5708 1.433 1.5708" />
+    <parent
+      link="RF_stering_arm" />
+    <child
+      link="RF_wheel" />
+    <axis
+      xyz="0 0 -1" />
+  </joint>
+  <link
+    name="RR_stering_arm">
+    <inertial>
+      <origin
+        xyz="-0.00804072936541492 -0.106038394646613 0.0027497797661836"
+        rpy="0 0 0" />
+      <mass
+        value="0.457316705822729" />
+      <inertia
+        ixx="0.00107939387504091"
+        ixy="-5.88026822050424E-06"
+        ixz="-8.44777251653618E-06"
+        iyy="0.000702333595442633"
+        iyz="-6.92236202269723E-06"
+        izz="0.000699127154714819" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="file://$(find sagan_description)/model/meshes/RR_stering_arm.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.501960784313725 0.501960784313725 0.501960784313725 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="file://$(find sagan_description)/model/meshes/RR_stering_arm.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="RR_stering_arm_joint"
+    type="continuous">
+    <origin
+      xyz="-0.185 -0.031 0.04225"
+      rpy="0 -1.5708 0" />
+    <parent
+      link="Right_arm" />
+    <child
+      link="RR_stering_arm" />
+    <axis
+      xyz="0 1 0" />
+  </joint>
+  <link
+    name="RR_wheel">
+    <inertial>
+      <origin
+        xyz="3.09745679317186E-05 7.30948701842954E-05 -0.0057297082584184"
+        rpy="0 0 0" />
+      <mass
+        value="0.504199733126219" />
+      <inertia
+        ixx="0.000783880200546954"
+        ixy="2.00979016523779E-09"
+        ixz="3.50298555520892E-07"
+        iyy="0.000783890492044935"
+        iyz="8.25796865403004E-07"
+        izz="0.00117428658750663" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="file://$(find sagan_description)/model/meshes/RR_wheel.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.752941176470588 0.752941176470588 0.752941176470588 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="file://$(find sagan_description)/model/meshes/RR_wheel.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="RR_wheel_joint"
+    type="continuous">
+    <origin
+      xyz="0 -0.1325 0"
+      rpy="1.5708 -1.3763 -1.5708" />
+    <parent
+      link="RR_stering_arm" />
+    <child
+      link="RR_wheel" />
+    <axis
+      xyz="0 0 -1" />
+  </joint>
+</robot>
