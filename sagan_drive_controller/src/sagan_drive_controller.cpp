@@ -154,19 +154,21 @@ controller_interface::CallbackReturn SaganDriverController::on_configure(
 
   
   joints_reference_subscriber_ = get_node()->create_subscription<sagan_interfaces::msg::SaganCmd>(
-    "~/SaganCommands", rclcpp::SystemDefaultsQoS(),
+    "/SaganCommands", rclcpp::SystemDefaultsQoS(),
     [this](const std::shared_ptr<sagan_interfaces::msg::SaganCmd> msg) -> void
     {
         std::lock_guard<std::mutex> lock(this->mutex_actuator);
-        // for (int index = 0; index < 12; index++)
-        // {
+        for (int index = 0; index < 4; index++)
+        {
+          wheel_command_interface_[index] = msg->wheel_cmd[index].angular_velocity;
+          steering_command_interface_[index] = msg->steering_cmd[index].angular_position;
         //     // qr[index] = msg->motor_cmd[index].q;
         //     // dqr[index] = msg->motor_cmd[index].dq;
         //     // kd[index] = msg->motor_cmd[index].kd;
         //     // kp[index] = msg->motor_cmd[index].kp;
         //     // tau[index] = msg->motor_cmd[index].tau;
             
-        // }
+        }
     });
 
   return CallbackReturn::SUCCESS;
@@ -295,11 +297,11 @@ controller_interface::return_type SaganDriverController::update(
   // update dynamic parameters
 
 
-  for (auto index = 0; index < 4; index++)
-  { 
-    wheel_command_interface_[index] = 10.0;
-    steering_command_interface_[index] = 3.14;
-  }
+  //for (auto index = 0; index < 4; index++)
+  //{ 
+  //  wheel_command_interface_[index] = 10.0;
+  //  steering_command_interface_[index] = 3.14;
+  //}
 
   CommandInterfacesUpdate();
 
