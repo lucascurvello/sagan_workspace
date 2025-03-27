@@ -26,7 +26,7 @@ private:
         for (int index = 0; index < 4; index++)
         {
             message.wheel_cmd[index].angular_velocity = 10.0;
-            message.steering_cmd[index].angular_position = 10.0;
+            message.steering_cmd[index].angular_position = -45*3.14/180;
         }
         
         // Publish the message
