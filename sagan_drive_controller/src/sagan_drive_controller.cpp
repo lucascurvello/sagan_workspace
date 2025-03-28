@@ -147,10 +147,12 @@ controller_interface::CallbackReturn SaganDriverController::on_configure(
     return ss_interfaces.str();
   };
 
-  RCLCPP_INFO(
+  RCLCPP_INFO
+  (
     logger, "Command interfaces are [%s] and and state interfaces are [%s].",
     get_interface_list(command_interface_types_).c_str(),
-    get_interface_list(state_interface_types_).c_str());
+    get_interface_list(state_interface_types_).c_str()
+  );
 
   
   joints_reference_subscriber_ = get_node()->create_subscription<sagan_interfaces::msg::SaganCmd>(
@@ -161,17 +163,11 @@ controller_interface::CallbackReturn SaganDriverController::on_configure(
         for (int index = 0; index < 4; index++)
         {
           wheel_command_interface_[index] = msg->wheel_cmd[index].angular_velocity;
-          steering_command_interface_[index] = msg->steering_cmd[index].angular_position;
-        //     // qr[index] = msg->motor_cmd[index].q;
-        //     // dqr[index] = msg->motor_cmd[index].dq;
-        //     // kd[index] = msg->motor_cmd[index].kd;
-        //     // kp[index] = msg->motor_cmd[index].kp;
-        //     // tau[index] = msg->motor_cmd[index].tau;
-            
+          steering_command_interface_[index] = msg->steering_cmd[index].angular_position;            
         }
-    });
+  });
 
-    joints_state_publisher_ = get_node()->create_publisher<sagan_interfaces::msg::SaganStates>("Sagan/SaganStates", 10);
+  joints_state_publisher_ = get_node()->create_publisher<sagan_interfaces::msg::SaganStates>("Sagan/SaganStates", 10);
 
   return CallbackReturn::SUCCESS;
 

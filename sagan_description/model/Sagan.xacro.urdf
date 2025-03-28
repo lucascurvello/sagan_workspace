@@ -14,8 +14,15 @@
       <child link="base_link"/>
     </joint>
     -->
-
+  <link name="odom"></link>  
   <link name="base_footprint"></link>
+  
+  <joint name="odom_to_base_footprint" type="fixed">
+        <parent link="odom"/>
+        <child link="base_footprint"/>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+  </joint> 
+
   <joint name="base_footprint_joint" type="fixed">
     <origin xyz="0 0 0.017" rpy="-1.5708 0 0" />
     <parent link="base_footprint" />
