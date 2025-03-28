@@ -171,6 +171,8 @@ controller_interface::CallbackReturn SaganDriverController::on_configure(
         }
     });
 
+    joints_state_publisher_ = get_node()->create_publisher<sagan_interfaces::msg::SaganStates>("Sagan/SaganStates", 10);
+
   return CallbackReturn::SUCCESS;
 
 }
@@ -304,6 +306,7 @@ controller_interface::return_type SaganDriverController::update(
   //}
 
   CommandInterfacesUpdate();
+  StatesPublisher();
 
   return controller_interface::return_type::OK;
 }
@@ -322,7 +325,17 @@ void SaganDriverController::CommandInterfacesUpdate(){
         RCLCPP_ERROR(logger, "Failed to set value for steering_command_interface_[%d]", index);
     }
   }
-  
+}
+
+void SaganDriverController::StatesPublisher(){
+  std::lock_guard<std::mutex> lock(this->mutex_actuator);
+
+  for (auto index = 0; index < 4; index++){
+    SaganStates_msg.wheel_state[index].angular_velocity = wheel_command_interface_[index];
+    SaganStates_msg.steering_state[index].angular_position = steering_command_interface_[index];
+  }
+
+  joints_state_publisher_->publish(SaganStates_msg);
 }
 
 } // namespace sagan_drive_controller

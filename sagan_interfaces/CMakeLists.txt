@@ -15,6 +15,9 @@ rosidl_generate_interfaces(${PROJECT_NAME}
   "msg/SaganCmd.msg"
   "msg/SteeringCmd.msg"
   "msg/WheelCmd.msg"
+  "msg/SaganStates.msg"
+  "msg/SteeringState.msg"
+  "msg/WheelState.msg"
   DEPENDENCIES std_msgs
 )
 

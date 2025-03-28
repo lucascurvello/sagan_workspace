@@ -9,6 +9,7 @@
 #include "hardware_interface/types/hardware_interface_type_values.hpp"
 
 #include "sagan_interfaces/msg/sagan_cmd.hpp"
+#include "sagan_interfaces/msg/sagan_states.hpp"
 #include "std_msgs/msg/float64_multi_array.hpp"
 
 namespace sagan_drive_controller
@@ -37,6 +38,8 @@ public:
     const rclcpp_lifecycle::State & previous_state) override;
 
   void CommandInterfacesUpdate();
+
+  void StatesPublisher();
   
 protected:
   std::vector<std::string> joint_names_;
@@ -82,6 +85,9 @@ protected:
 
   std::mutex mutex_actuator;
   rclcpp::Subscription<sagan_interfaces::msg::SaganCmd>::SharedPtr joints_reference_subscriber_;
+  rclcpp::Publisher<sagan_interfaces::msg::SaganStates>::SharedPtr joints_state_publisher_;
+
+  sagan_interfaces::msg::SaganStates SaganStates_msg;
 
 };
 
