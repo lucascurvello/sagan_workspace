@@ -14,7 +14,7 @@ public:
     {
         publisher_ = this->create_publisher<sagan_interfaces::msg::SaganCmd>("/SaganCommands", 1);
 
-        timer_ = this->create_wall_timer(100ms, std::bind(&MinimalPublisher::publish_message, this));
+        timer_ = this->create_wall_timer(10ms, std::bind(&MinimalPublisher::publish_message, this));
     }
 
 private:
@@ -26,7 +26,7 @@ private:
         for (int index = 0; index < 4; index++)
         {
             message.wheel_cmd[index].angular_velocity = 10.0;
-            message.steering_cmd[index].angular_position = -45*3.14/180;
+            message.steering_cmd[index].angular_position = 15*3.14/180;
         }
         
         // Publish the message

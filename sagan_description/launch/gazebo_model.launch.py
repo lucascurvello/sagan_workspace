@@ -49,7 +49,6 @@ def generate_launch_description():
         arguments=['joint_state_broadcaster'],
     )
     
-    
     nodeRobotStatePublisher = Node(
         package="robot_state_publisher",
         executable="robot_state_publisher",
@@ -57,14 +56,20 @@ def generate_launch_description():
         parameters=[{"robot_description": robotDescription, "use_sim_time": True}]
     )
 
-    #nodeJointStatePublisher = Node(
-    #    package="joint_state_publisher",
-    #    executable="joint_state_publisher",
-    #    output="screen",
-    #    parameters=[{"robot_description": robotDescription, "use_sim_time": True}]
-    #)
+    nodeJointStatePublisher = Node(
+        package="joint_state_publisher",
+        executable="joint_state_publisher",
+        output="screen",
+        parameters=[{"robot_description": robotDescription, "use_sim_time": True, 'rate': 100}]
+    )
 
-    
+    nodeSaganOdometry = Node(
+        package="sagan_odometry",
+        executable="sagan_odometry",
+        output="screen",
+        parameters=[{"use_sim_time": True}]
+    )
+
     bridge_params = os.path.join(
     get_package_share_directory(namePackage),
     "parameters",
@@ -82,7 +87,6 @@ def generate_launch_description():
     output="screen",
     )       
 
-    
     launchDescriptionObject = LaunchDescription()
     
     launchDescriptionObject.add_action(gazeboLaunch)
@@ -92,6 +96,7 @@ def generate_launch_description():
     launchDescriptionObject.add_action(start_gazebo_ros_bridge_cmd)
     launchDescriptionObject.add_action(joint_state_broadcaster_spawner)
     launchDescriptionObject.add_action(diff_drive_base_controller_spawner)
+    launchDescriptionObject.add_action(nodeSaganOdometry)
     #launchDescriptionObject.add_action(nodeJointStatePublisher)
     return launchDescriptionObject
     

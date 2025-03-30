@@ -6,7 +6,7 @@ controller_manager:
      type: sagan_drive_controller/SaganDriverController
     
     joint_state_broadcaster:
-      type: joint_state_broadcaster/JointStateBroadcaster
+     type: joint_state_broadcaster/JointStateBroadcaster
   
 sagan_drive_controller:
   ros__parameters:
@@ -40,5 +40,14 @@ sagan_drive_controller:
     state_interfaces:
       - position
       - velocity
-      
+
+joint_state_broadcaster:
+  ros__parameters:
+    extra_joints: 
+     - Left_arm_joint
+     - Right_arm_joint
+     - base_footprint_joint
+    use_urdf_to_filter: true
+
+
       

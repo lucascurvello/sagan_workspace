@@ -316,9 +316,14 @@ void SaganDriverController::CommandInterfacesUpdate(){
     if (!command_interfaces_[index].set_value(wheel_command_interface_[index])) {
         RCLCPP_ERROR(logger, "Failed to set value for wheel_command_interface_[%d]", index);
     }
+  }
 
-    if (!command_interfaces_[index + 4].set_value(steering_command_interface_[index])) {
-        RCLCPP_ERROR(logger, "Failed to set value for steering_command_interface_[%d]", index);
+  for (auto index = 0; index < 2; index++){
+    if (!command_interfaces_[index + 4].set_value(-steering_command_interface_[index])) {
+      RCLCPP_ERROR(logger, "Failed to set value for steering_command_interface_[%d]", index);
+    }
+    if (!command_interfaces_[index + 6].set_value(steering_command_interface_[index + 2])) {
+      RCLCPP_ERROR(logger, "Failed to set value for steering_command_interface_[%d]", index);
     }
   }
 }

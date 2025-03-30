@@ -3,6 +3,8 @@
 #include <nav_msgs/msg/odometry.hpp>
 #include <geometry_msgs/msg/transform_stamped.hpp>
 #include <tf2_ros/transform_broadcaster.h>
+#include <tf2/LinearMath/Quaternion.h>
+#include <tf2_geometry_msgs/tf2_geometry_msgs.hpp>
 #include <chrono>
 #include <string>
 
@@ -46,9 +48,12 @@ private:
         double phi = 2 * vm * tan(delta) / wheel_base;  // Angular velocity
 
         // Update robot pose
+        theta_ += phi * delta_t;
         x_ += vm * delta_t * cos(theta_);
         y_ += vm * delta_t * sin(theta_);
-        theta_ += phi * delta_t;
+        
+        SaganOdometryNode::last_v_ = vm;
+        SaganOdometryNode::last_omega_ = phi;
     }
 
     void timer_callback()
@@ -64,38 +69,30 @@ private:
         odom_msg.pose.pose.position.y = y_;
         odom_msg.pose.pose.position.z = 0.0;
 
-        // Set orientation (convert theta to quaternion)
-        odom_msg.pose.pose.orientation = convert_to_quaternion(theta_);
+        // Set orientation (convert theta to quaternion) 
+        tf2::Quaternion q;
+        q.setRPY(0, 0, theta_);
+        q.normalize();
+        geometry_msgs::msg::Quaternion msg_quat = tf2::toMsg(q);
+        odom_msg.pose.pose.orientation = msg_quat;
 
         // Set velocities
-        odom_msg.twist.twist.linear.x = last_v_;
-        odom_msg.twist.twist.angular.z = last_omega_;
-
-        odom_publisher_->publish(odom_msg);
+        //odom_msg.twist.twist.linear.x = SaganOdometryNode::last_v_;
+        //odom_msg.twist.twist.angular.z = SaganOdometryNode::last_omega_;
 
         // Broadcast Transform from odom to base_link
         geometry_msgs::msg::TransformStamped transform_stamped;
-        transform_stamped.header.stamp = this->now();
+        transform_stamped.header.stamp = this->get_clock()->now();
         transform_stamped.header.frame_id = "odom";
         transform_stamped.child_frame_id = "base_footprint";
         transform_stamped.transform.translation.x = x_;
         transform_stamped.transform.translation.y = y_;
         transform_stamped.transform.translation.z = 0.0;
-        transform_stamped.transform.rotation = odom_msg.pose.pose.orientation;
+        transform_stamped.transform.rotation= msg_quat;
 
         // Send the transform
         tf_broadcaster_->sendTransform(transform_stamped);
-
-        last_v_ = state_callback::vm;
-        last_omega_ = state_callback::phi;
-    }
-
-    geometry_msgs::msg::Quaternion convert_to_quaternion(double theta)
-    {
-        geometry_msgs::msg::Quaternion q;
-        q.z = sin(theta / 2.0);
-        q.w = cos(theta / 2.0);
-        return q;
+        odom_publisher_->publish(odom_msg);
     }
 
     // Member variables
