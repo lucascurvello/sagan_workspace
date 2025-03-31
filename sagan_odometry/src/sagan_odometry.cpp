@@ -39,7 +39,7 @@ private:
         double delta = msg->steering_state[0].angular_position;
         
         double wheel_radius = 0.06;
-        double wheel_base = 0.185; 
+        double wheel_base = 2 * 0.185; 
 
         double delta_t = 0.01;  // Time step (could be obtained dynamically or use a constant)
 
