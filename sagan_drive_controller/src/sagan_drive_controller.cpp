@@ -332,11 +332,15 @@ void SaganDriverController::StatesPublisher(){
   std::lock_guard<std::mutex> lock(this->mutex_actuator);
 
   for (auto index = 0; index < 4; index++){
-    SaganStates_msg.wheel_state[index].angular_velocity = wheel_command_interface_[index];
-    SaganStates_msg.steering_state[index].angular_position = steering_command_interface_[index];
+    SaganStates_msg.wheel_state[index].angular_velocity = joint_state_interface_[1][index].get().get_value();
+    SaganStates_msg.steering_state[index].angular_position = joint_state_interface_[0][index + 4].get().get_value();
   }
 
   joints_state_publisher_->publish(SaganStates_msg);
+}
+
+void SaganDriverController::WheelEmulatorUpdate(){
+  v = joint_state_interface_[1][0].get().get_value();
 }
 
 } // namespace sagan_drive_controller

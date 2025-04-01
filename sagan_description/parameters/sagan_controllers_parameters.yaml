@@ -37,9 +37,12 @@ sagan_drive_controller:
     steering_command_interfaces:
       - position
 
+    #ATENÇÃO mudar a ordem das interfaces de estado explode tudo : position, velocity e effort
+    #MEME, pode mudar sim
     state_interfaces:
       - position
       - velocity
+      - effort
 
 joint_state_broadcaster:
   ros__parameters:
