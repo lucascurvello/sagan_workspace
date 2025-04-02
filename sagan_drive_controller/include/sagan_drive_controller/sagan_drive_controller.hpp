@@ -3,6 +3,7 @@
 
 #include <memory>
 #include <string>
+#include <vector>
 
 #include "controller_interface/controller_interface.hpp"
 #include "controller_interface/helpers.hpp"
@@ -41,6 +42,8 @@ namespace sagan_drive_controller
 
     void StatesPublisher();
 
+    void WheelEmulatorUpdate();
+
   protected:
     std::vector<std::string> joint_names_;
     std::vector<std::string> wheel_joint_names_;
@@ -64,6 +67,14 @@ namespace sagan_drive_controller
     std::vector<double> wheel_command_interface_;
     std::vector<double> steering_command_interface_;
 
+    std::vector<double> wheel_velocity_reference_;
+    std::vector<double> wheel_velocity_error_; 
+    std::vector<double> wheel_velocity_previous_; 
+
+    std::vector<double> steering_position_reference_;
+    std::vector<double> steering_velocity_error_;
+    std::vector<double> steering_velocity_previous_;
+    
     const std::vector<std::string> allowed_state_interface_types_ = {
         hardware_interface::HW_IF_POSITION,
         hardware_interface::HW_IF_VELOCITY,

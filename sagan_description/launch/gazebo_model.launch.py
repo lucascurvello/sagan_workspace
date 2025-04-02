@@ -97,7 +97,7 @@ def generate_launch_description():
     launchDescriptionObject.add_action(start_gazebo_ros_bridge_cmd)
     launchDescriptionObject.add_action(joint_state_broadcaster_spawner)
     launchDescriptionObject.add_action(diff_drive_base_controller_spawner)
-    #launchDescriptionObject.add_action(nodeSaganOdometry)
+    launchDescriptionObject.add_action(nodeSaganOdometry)
     #launchDescriptionObject.add_action(nodeJointStatePublisher)
     return launchDescriptionObject
     

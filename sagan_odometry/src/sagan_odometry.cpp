@@ -35,9 +35,12 @@ private:
     void state_callback(const sagan_interfaces::msg::SaganStates::SharedPtr msg)
     {
         // Forward kinematics computation (depending on the robot type: e.g., differential drive)
-        double omega = msg->wheel_state[0].angular_velocity;
-        double delta = msg->steering_state[0].angular_position;
-        
+        omega = msg->wheel_state[0].angular_velocity;
+        delta = -msg->steering_state[0].angular_position;
+    }
+
+    void timer_callback()
+    {
         double wheel_radius = 0.06;
         double wheel_base = 2 * 0.185; 
 
@@ -51,13 +54,8 @@ private:
         theta_ += phi * delta_t;
         x_ += vm * delta_t * cos(theta_);
         y_ += vm * delta_t * sin(theta_);
-        
-        SaganOdometryNode::last_v_ = vm;
-        SaganOdometryNode::last_omega_ = phi;
-    }
 
-    void timer_callback()
-    {
+
         // Publish Odometry Message
         auto odom_msg = nav_msgs::msg::Odometry();
         odom_msg.header.stamp = this->now();
@@ -103,6 +101,7 @@ private:
 
     double x_, y_, theta_;   // Robot pose
     double last_v_, last_omega_;  // Last computed velocities
+    double omega, delta;
 };
 
 int main(int argc, char *argv[])

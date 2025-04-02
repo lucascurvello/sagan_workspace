@@ -32,10 +32,10 @@ sagan_drive_controller:
       - velocity
 
     wheel_command_interfaces:
-      - effort
+      - velocity
     
     steering_command_interfaces:
-      - position
+      - effort
 
     #ATENÇÃO mudar a ordem das interfaces de estado explode tudo : position, velocity e effort
     #MEME, pode mudar sim

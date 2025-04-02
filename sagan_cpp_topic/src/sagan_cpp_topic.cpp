@@ -25,15 +25,15 @@ private:
         if (MinimalPublisher::x == 0){
             for (int index = 0; index < 4; index++)
             {
-                message.wheel_cmd[index].angular_velocity = 0.5;
-                message.steering_cmd[index].angular_position = 0; //15*3.14/180;
+                message.wheel_cmd[index].angular_velocity = 0.0;
+                message.steering_cmd[index].angular_position = 0.5; //15*3.14/180;
             }   
             MinimalPublisher::x = 1;
         }else{
             for (int index = 0; index < 4; index++)
             {
                 message.wheel_cmd[index].angular_velocity = 0.0;
-                message.steering_cmd[index].angular_position = 0; //15*3.14/180;
+                message.steering_cmd[index].angular_position = 0.0; //15*3.14/180;
             }  
         }
         
