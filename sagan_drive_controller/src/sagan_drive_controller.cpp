@@ -19,7 +19,9 @@ namespace sagan_drive_controller
 
 SaganDriverController::SaganDriverController()
   : controller_interface::ControllerInterface(),
-    joint_names_({})
+    joint_names_({}),
+    steering_position_error_(3, std::vector<double>(4,0)),
+    steering_position_previous_(3, std::vector<double>(4,0))
 {
   fprintf(stderr, "Contruction done");
 }
@@ -165,7 +167,7 @@ controller_interface::CallbackReturn SaganDriverController::on_configure(
         for (int index = 0; index < 4; index++)
         {
           wheel_velocity_reference_[index] = msg->wheel_cmd[index].angular_velocity;
-          steering_command_interface_[index] = msg->steering_cmd[index].angular_position;            
+          steering_position_reference_[index] = msg->steering_cmd[index].angular_position;            
         }
   });
 
@@ -249,8 +251,6 @@ controller_interface::CallbackReturn SaganDriverController::on_activate(
   wheel_velocity_error_.resize(4);
   wheel_velocity_previous_.resize(4);
   steering_position_reference_.resize(4);
-  steering_velocity_error_.resize(4);
-  steering_velocity_previous_.resize(4);
 
   for (size_t i = 0; i < 4; i++)
   {
@@ -260,8 +260,6 @@ controller_interface::CallbackReturn SaganDriverController::on_activate(
     wheel_velocity_error_[i] = 0.0;
     wheel_velocity_previous_[i] = 0.0;
     steering_position_reference_[i] = 0.0;
-    steering_velocity_error_[i] = 0.0;
-    steering_velocity_previous_[i] = 0.0;
   }
   
   
@@ -314,6 +312,7 @@ controller_interface::return_type SaganDriverController::update(
   //  wheel_command_interface_[index] = 10.0;
   //  steering_command_interface_[index] = 3.14;
   //}
+  SteeringEmulatorUpdate();
   WheelEmulatorUpdate();
   CommandInterfacesUpdate();
   StatesPublisher();
@@ -360,6 +359,25 @@ void SaganDriverController::WheelEmulatorUpdate(){
     wheel_velocity_error_[index] = wheel_velocity_reference_[index] - SaganStates_msg.wheel_state[index].angular_velocity;
     wheel_command_interface_[index] = wheel_velocity_previous_[index] + 0.06916 * wheel_velocity_error_[index];
     wheel_velocity_previous_[index] = wheel_command_interface_[index]; 
+  }  
+}
+
+void SaganDriverController::SteeringEmulatorUpdate(){
+
+  for (auto index = 0; index < 4; index++)
+  {
+    // Shift past inputs and outputs
+    steering_position_error_[2][index] = steering_position_error_[1][index];
+    steering_position_error_[1][index] = steering_position_error_[0][index];
+    steering_position_error_[0][index] = steering_position_reference_[index] - SaganStates_msg.steering_state[index].angular_position;
+
+    // Compute new output
+    steering_command_interface_[index] = 2.905 * steering_position_previous_[0][index] - 2.81 * steering_position_previous_[1][index] + 0.9048 * steering_position_previous_[2][index] 
+        + 0.001534 * steering_position_error_[2][index] - 4.973e-5 * steering_position_error_[1][index] - 0.001483 * steering_position_error_[0][index];
+    
+    steering_position_previous_[2][index] = steering_position_previous_[1][index];
+    steering_position_previous_[1][index] = steering_position_previous_[0][index];
+    steering_position_previous_[0][index] = steering_command_interface_[index]; 
   }  
 }
 

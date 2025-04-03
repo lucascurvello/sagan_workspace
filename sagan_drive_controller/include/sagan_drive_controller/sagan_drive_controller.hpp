@@ -44,6 +44,7 @@ namespace sagan_drive_controller
 
     void WheelEmulatorUpdate();
 
+    void SteeringEmulatorUpdate();
   protected:
     std::vector<std::string> joint_names_;
     std::vector<std::string> wheel_joint_names_;
@@ -72,8 +73,10 @@ namespace sagan_drive_controller
     std::vector<double> wheel_velocity_previous_; 
 
     std::vector<double> steering_position_reference_;
-    std::vector<double> steering_velocity_error_;
-    std::vector<double> steering_velocity_previous_;
+    std::vector<std::vector<double>> steering_position_error_;
+    std::vector<std::vector<double>> steering_position_previous_;
+
+ 
     
     const std::vector<std::string> allowed_state_interface_types_ = {
         hardware_interface::HW_IF_POSITION,
