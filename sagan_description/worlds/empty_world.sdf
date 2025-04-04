@@ -23,7 +23,6 @@
       name="gz::sim::systems::Imu">
     </plugin>
 
-
     <include>
       <uri>
         https://fuel.gazebosim.org/1.0/OpenRobotics/models/Ground Plane
@@ -54,7 +53,7 @@
       <real_time_factor>1</real_time_factor>
       <ode>
         <solver>
-          <type>quick</type>
+          <type>world</type>
           <iters>150</iters>
           <precon_iters>0</precon_iters>
           <sor>1.400000</sor>
