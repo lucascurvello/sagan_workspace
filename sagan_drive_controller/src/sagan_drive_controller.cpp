@@ -372,8 +372,8 @@ void SaganDriverController::SteeringEmulatorUpdate(){
     steering_command_interface_[index] =  2.188 * steering_position_error_[index];
     steering_position_previous_[index] = steering_command_interface_[index]; 
 
-    steering_position_error_[index + 2] =  - (steering_position_reference_[index + 2] - SaganStates_msg.steering_state[index + 2].angular_position);
-    steering_command_interface_[index + 2] =  -2.188 * steering_position_error_[index + 2];
+    steering_position_error_[index + 2] =  (steering_position_reference_[index + 2] + SaganStates_msg.steering_state[index + 2].angular_position);
+    steering_command_interface_[index + 2] =  2.188 * steering_position_error_[index + 2];
     steering_position_previous_[index + 2] =  steering_command_interface_[index + 2];
   }  
 }
