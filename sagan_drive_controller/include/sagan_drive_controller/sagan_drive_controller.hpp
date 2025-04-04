@@ -73,8 +73,8 @@ namespace sagan_drive_controller
     std::vector<double> wheel_velocity_previous_; 
 
     std::vector<double> steering_position_reference_;
-    std::vector<std::vector<double>> steering_position_error_;
-    std::vector<std::vector<double>> steering_position_previous_;
+    std::vector<double> steering_position_error_;
+    std::vector<double>steering_position_previous_;
 
  
     

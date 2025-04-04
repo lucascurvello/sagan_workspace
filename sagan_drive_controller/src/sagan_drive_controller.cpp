@@ -19,9 +19,7 @@ namespace sagan_drive_controller
 
 SaganDriverController::SaganDriverController()
   : controller_interface::ControllerInterface(),
-    joint_names_({}),
-    steering_position_error_(3, std::vector<double>(4,0)),
-    steering_position_previous_(3, std::vector<double>(4,0))
+    joint_names_({})
 {
   fprintf(stderr, "Contruction done");
 }
@@ -251,6 +249,8 @@ controller_interface::CallbackReturn SaganDriverController::on_activate(
   wheel_velocity_error_.resize(4);
   wheel_velocity_previous_.resize(4);
   steering_position_reference_.resize(4);
+  steering_position_error_.resize(4);
+  steering_position_previous_.resize(4);
 
   for (size_t i = 0; i < 4; i++)
   {
@@ -260,6 +260,8 @@ controller_interface::CallbackReturn SaganDriverController::on_activate(
     wheel_velocity_error_[i] = 0.0;
     wheel_velocity_previous_[i] = 0.0;
     steering_position_reference_[i] = 0.0;
+    steering_position_error_[i] = 0.0;
+    steering_position_previous_[i] = 0.0;
   }
   
   
@@ -332,10 +334,10 @@ void SaganDriverController::CommandInterfacesUpdate(){
   }
 
   for (auto index = 0; index < 2; index++){
-    if (!command_interfaces_[index + 4].set_value(-steering_command_interface_[index])) {
+    if (!command_interfaces_[index + 4].set_value(steering_command_interface_[index])) {
       RCLCPP_ERROR(logger, "Failed to set value for steering_command_interface_[%d]", index);
     }
-    if (!command_interfaces_[index + 6].set_value(steering_command_interface_[index + 2])) {
+    if (!command_interfaces_[index + 6].set_value(-steering_command_interface_[index + 2])) {
       RCLCPP_ERROR(logger, "Failed to set value for steering_command_interface_[%d]", index);
     }
   }
@@ -346,7 +348,7 @@ void SaganDriverController::StatesPublisher(){
 
   for (auto index = 0; index < 4; index++){
     SaganStates_msg.wheel_state[index].angular_velocity = joint_state_interface_[1][index].get().get_value();
-    SaganStates_msg.steering_state[index].angular_position = joint_state_interface_[1][index + 4].get().get_value();
+    SaganStates_msg.steering_state[index].angular_position = joint_state_interface_[0][index + 4].get().get_value();
   }
 
   joints_state_publisher_->publish(SaganStates_msg);
@@ -364,20 +366,15 @@ void SaganDriverController::WheelEmulatorUpdate(){
 
 void SaganDriverController::SteeringEmulatorUpdate(){
 
-  for (auto index = 0; index < 4; index++)
+  for (auto index = 0; index < 2; index++)
   {
-    // Shift past inputs and outputs
-    steering_position_error_[2][index] = steering_position_error_[1][index];
-    steering_position_error_[1][index] = steering_position_error_[0][index];
-    steering_position_error_[0][index] = steering_position_reference_[index] - SaganStates_msg.steering_state[index].angular_position;
+    steering_position_error_[index] = steering_position_reference_[index] - SaganStates_msg.steering_state[index].angular_position;
+    steering_command_interface_[index] =  2.188 * steering_position_error_[index];
+    steering_position_previous_[index] = steering_command_interface_[index]; 
 
-    // Compute new output
-    steering_command_interface_[index] = 2.905 * steering_position_previous_[0][index] - 2.81 * steering_position_previous_[1][index] + 0.9048 * steering_position_previous_[2][index] 
-        + 0.001534 * steering_position_error_[2][index] - 4.973e-5 * steering_position_error_[1][index] - 0.001483 * steering_position_error_[0][index];
-    
-    steering_position_previous_[2][index] = steering_position_previous_[1][index];
-    steering_position_previous_[1][index] = steering_position_previous_[0][index];
-    steering_position_previous_[0][index] = steering_command_interface_[index]; 
+    steering_position_error_[index + 2] =  - (steering_position_reference_[index + 2] - SaganStates_msg.steering_state[index + 2].angular_position);
+    steering_command_interface_[index + 2] =  -2.188 * steering_position_error_[index + 2];
+    steering_position_previous_[index + 2] =  steering_command_interface_[index + 2];
   }  
 }
 
