@@ -75,8 +75,6 @@ namespace sagan_drive_controller
     std::vector<double> steering_position_reference_;
     std::vector<double> steering_position_error_;
     std::vector<double>steering_position_previous_;
-
- 
     
     const std::vector<std::string> allowed_state_interface_types_ = {
         hardware_interface::HW_IF_POSITION,

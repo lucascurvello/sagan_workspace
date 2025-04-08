@@ -264,7 +264,6 @@ controller_interface::CallbackReturn SaganDriverController::on_activate(
     steering_position_previous_[i] = 0.0;
   }
   
-  
   // for (const auto &interface : command_interface_types_)
   // {
   //   auto it =
@@ -306,14 +305,7 @@ controller_interface::return_type SaganDriverController::update(
   const rclcpp::Time & time, const rclcpp::Duration & period)
 {
   const auto logger = get_node()->get_logger();
-  // update dynamic parameters
-
-
-  //for (auto index = 0; index < 4; index++)
-  //{ 
-  //  wheel_command_interface_[index] = 10.0;
-  //  steering_command_interface_[index] = 3.14;
-  //}
+ 
   SteeringEmulatorUpdate();
   WheelEmulatorUpdate();
   CommandInterfacesUpdate();
@@ -372,7 +364,7 @@ void SaganDriverController::SteeringEmulatorUpdate(){
     steering_command_interface_[index] =  2.188 * steering_position_error_[index];
     steering_position_previous_[index] = steering_command_interface_[index]; 
 
-    steering_position_error_[index + 2] =  (steering_position_reference_[index + 2] + SaganStates_msg.steering_state[index + 2].angular_position);
+    steering_position_error_[index + 2] =  steering_position_reference_[index + 2] + SaganStates_msg.steering_state[index + 2].angular_position;
     steering_command_interface_[index + 2] =  2.188 * steering_position_error_[index + 2];
     steering_position_previous_[index + 2] =  steering_command_interface_[index + 2];
   }  

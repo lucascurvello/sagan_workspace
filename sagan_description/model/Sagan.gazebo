@@ -51,6 +51,13 @@
             <topic>imu</topic>
         </sensor>
     </gazebo>
-    
 
+    <gazebo>
+        <plugin filename="gz-sim-odometry-publisher-system" name="gz::sim::systems::OdometryPublisher">
+            <odom_frame>odom</odom_frame>
+            <robot_base_frame>gz_reference</robot_base_frame>
+            <odom_publish_frequency>50</odom_publish_frequency>
+        </plugin>
+    </gazebo>
+   
 </robot>

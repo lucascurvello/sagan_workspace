@@ -10,6 +10,8 @@
   
   <link name="odom"></link> 
    
+  <link name="efk_reference"></link>
+
   <!--
    <link name="world"/>
   <joint name="world_to_odom" type="continuous">
@@ -19,13 +21,24 @@
   </joint>  
   -->
   
-  
   <!--<link name="base_footprint"></link>
     <joint name="base_link_joint" type="fixed">
       <parent link="base_footprint"/>
       <child link="base_link"/>
     </joint>
   -->
+
+  <link name="gz_reference"></link>
+  <joint name="odom_gz_reference_joint" type="fixed">
+        <parent link="odom"/>
+        <child link="gz_reference"/>
+  </joint> 
+
+  <joint name="odom_efk_joint" type="fixed">
+        <parent link="odom"/>
+        <child link="efk_reference"/>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+  </joint> 
   
   <link name="base_footprint"></link>
   
@@ -614,7 +627,7 @@
 
   <!-- Sensors Links and Joints-->
 
-   <link
+  <link
     name="imu_link">
     <inertial>
       <origin
@@ -636,13 +649,44 @@
     type="fixed">
     <origin
       xyz="0 0 0"
-      rpy="0 0 0" />
+      rpy="-1.5708 0 0" />
     <parent
       link="base_link" />
     <child
       link="imu_link" />
     <axis
-      xyz="0 0.1 0" />
+      xyz="0 0 0" />
+  </joint>
+
+  <link
+    name="odom_gz_link">
+    <inertial>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <mass
+        value="0" />
+      <inertia
+        ixx="0"
+        ixy="0"
+        ixz="0"
+        iyy="0"
+        iyz="0"
+        izz="0" />
+    </inertial>
+  </link>
+  <joint
+    name="odom_gz_joint"
+    type="fixed">
+    <origin
+      xyz="0 0 0"
+      rpy="-1.5708 0 0" />
+    <parent
+      link="base_link" />
+    <child
+      link="odom_gz_link" />
+    <axis
+      xyz="0 0 0" />
   </joint>
 
 </robot>
