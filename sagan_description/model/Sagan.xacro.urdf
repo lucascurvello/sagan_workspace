@@ -154,7 +154,7 @@
         xyz="-0.00804072955706647 -0.106038395307323 0.00274977981157196"
         rpy="0 0 0" />
       <mass
-        value="0.457316704111482" />
+        value="0.457" />
       <inertia
         ixx="0.00107939387445048"
         ixy="-5.88026814841312E-06"
@@ -207,7 +207,7 @@
         xyz="3.09746851944182E-05 7.3094613101371E-05 -0.00572970837480286"
         rpy="0 0 0" />
       <mass
-        value="0.504199735680765" />
+        value="0.500" />
       <inertia
         ixx="0.000783880205929948"
         ixy="2.01226383831894E-09"
@@ -235,9 +235,8 @@
         xyz="0 0 0"
         rpy="0 0 0" />
       <geometry>
-        <mesh
-          filename="file://$(find sagan_description)/model/meshes/LF_wheel.STL" />
-      </geometry>
+        <cylinder radius="0.06" length="0.06"/>
+      </geometry>  
     </collision>
   </link>
   <joint
@@ -260,7 +259,7 @@
         xyz="0.00804071716967378 -0.106038396919281 0.00274978112621285"
         rpy="0 0 0" />
       <mass
-        value="0.457316671284394" />
+        value="0.457" />
       <inertia
         ixx="0.00107939385640447"
         ixy="5.88023069536254E-06"
@@ -313,7 +312,7 @@
         xyz="3.0974725421351E-05 7.30947612943567E-05 -0.00572970824386257"
         rpy="0 0 0" />
       <mass
-        value="0.504199729718972" />
+        value="0.500" />
       <inertia
         ixx="0.000783880202895659"
         ixy="2.01039023766552E-09"
@@ -341,9 +340,8 @@
         xyz="0 0 0"
         rpy="0 0 0" />
       <geometry>
-        <mesh
-          filename="file://$(find sagan_description)/model/meshes/LR_wheel.STL" />
-      </geometry>
+        <cylinder radius="0.06" length="0.06"/>
+      </geometry>  
     </collision>
   </link>
   <joint
@@ -419,7 +417,7 @@
         xyz="0.00804071712769167 -0.106038397059761 0.00274978119970537"
         rpy="0 0 0" />
       <mass
-        value="0.457316670820617" />
+        value="0.457" />
       <inertia
         ixx="0.00107939385625459"
         ixy="5.88023119472766E-06"
@@ -472,7 +470,7 @@
         xyz="3.09746486688856E-05 7.30947746340888E-05 -0.00572970830710698"
         rpy="0 0 0" />
       <mass
-        value="0.504199732627693" />
+        value="0.500" />
       <inertia
         ixx="0.000783880202735922"
         ixy="2.00980892579107E-09"
@@ -500,9 +498,8 @@
         xyz="0 0 0"
         rpy="0 0 0" />
       <geometry>
-        <mesh
-          filename="file://$(find sagan_description)/model/meshes/RF_wheel.STL" />
-      </geometry>
+        <cylinder radius="0.06" length="0.06"/>
+      </geometry>  
     </collision>
   </link>
   <joint
@@ -525,7 +522,7 @@
         xyz="-0.00804072936541492 -0.106038394646613 0.0027497797661836"
         rpy="0 0 0" />
       <mass
-        value="0.457316705822729" />
+        value="0.457" />
       <inertia
         ixx="0.00107939387504091"
         ixy="-5.88026822050424E-06"
@@ -578,7 +575,7 @@
         xyz="3.09745679317186E-05 7.30948701842954E-05 -0.0057297082584184"
         rpy="0 0 0" />
       <mass
-        value="0.504199733126219" />
+        value="0.500" />
       <inertia
         ixx="0.000783880200546954"
         ixy="2.00979016523779E-09"
@@ -606,9 +603,8 @@
         xyz="0 0 0"
         rpy="0 0 0" />
       <geometry>
-        <mesh
-          filename="file://$(find sagan_description)/model/meshes/RR_wheel.STL" />
-      </geometry>
+        <cylinder radius="0.06" length="0.06"/>
+      </geometry>  
     </collision>
   </link>
   <joint
@@ -649,7 +645,7 @@
     type="fixed">
     <origin
       xyz="0 0 0"
-      rpy="-1.5708 0 0" />
+      rpy="-1.5708 0 3.1415"/>
     <parent
       link="base_link" />
     <child

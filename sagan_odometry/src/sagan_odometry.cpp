@@ -15,7 +15,7 @@ class SaganOdometryNode : public rclcpp::Node
 public:
     SaganOdometryNode()
     : Node("sagan_odometry_node"),
-      x_(0.0), y_(0.0), theta_(0.0)  // Initialize robot position and orientation
+      x_(0.0), y_(0.0), theta_(0.0), last_x_(0.0), last_y_(0.0), last_omega_(0.0)  // Initialize robot position and orientation
     {
         // Subscriber to SaganStates topic
         subscription_ = this->create_subscription<sagan_interfaces::msg::SaganStates>(
@@ -50,6 +50,11 @@ private:
         double vm = omega * wheel_radius * cos(delta);  // Linear velocity
         double phi = 2 * vm * tan(delta) / wheel_base;  // Angular velocity
 
+        //Update last values
+        last_x_ = x_;
+        last_y_ = y_;
+        last_omega_ = theta_;
+
         // Update robot pose
         theta_ += phi * delta_t;
         x_ += vm * delta_t * cos(theta_);
@@ -66,6 +71,10 @@ private:
         odom_msg.pose.pose.position.x = x_;
         odom_msg.pose.pose.position.y = y_;
         odom_msg.pose.pose.position.z = 0.0;
+
+        odom_msg.twist.twist.linear.x = vm * cos(theta_);
+        odom_msg.twist.twist.linear.y = vm * sin(theta_);
+        odom_msg.twist.twist.angular.z = phi;
 
         // Set orientation (convert theta to quaternion) 
         tf2::Quaternion q;
@@ -100,7 +109,7 @@ private:
     std::shared_ptr<tf2_ros::TransformBroadcaster> tf_broadcaster_;
 
     double x_, y_, theta_;   // Robot pose
-    double last_v_, last_omega_;  // Last computed velocities
+    double last_x_, last_y_, last_omega_;  // Last computed velocities
     double omega, delta;
 };
 

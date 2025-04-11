@@ -318,10 +318,13 @@ void SaganDriverController::CommandInterfacesUpdate(){
 
   auto logger = get_node()->get_logger();
 
-  for (auto index = 0; index < 4; index++)
+  for (auto index = 0; index < 2; index++)
   {
     if (!command_interfaces_[index].set_value(wheel_command_interface_[index])) {
         RCLCPP_ERROR(logger, "Failed to set value for wheel_command_interface_[%d]", index);
+    }
+    if (!command_interfaces_[index + 2].set_value(wheel_command_interface_[index + 2])) {
+      RCLCPP_ERROR(logger, "Failed to set value for wheel_command_interface_[%d]", index);
     }
   }
 
