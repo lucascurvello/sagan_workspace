@@ -34,32 +34,50 @@ public:
 private:
     void state_callback(const sagan_interfaces::msg::SaganStates::SharedPtr msg)
     {
-        // Forward kinematics computation (depending on the robot type: e.g., differential drive)
-        omega = msg->wheel_state[0].angular_velocity;
-        delta = -msg->steering_state[0].angular_position;
+        for (auto index = 0; index < 4; index++)
+        {
+            omega[index] = msg->wheel_state[index].angular_velocity;
+            delta[index] = msg->steering_state[index].angular_position;
+        }
+        
     }
 
     void timer_callback()
     {
         double wheel_radius = 0.06;
-        double wheel_base = 2 * 0.185; 
+        double wheel_base = 0.370; 
+        double wheel_separetion = 0.2975;
 
         double delta_t = 0.01;  // Time step (could be obtained dynamically or use a constant)
 
-        // Differential drive forward kinematics
-        double vm = omega * wheel_radius * cos(delta);  // Linear velocity
-        double phi = 2 * vm * tan(delta) / wheel_base;  // Angular velocity
+        double x_sep[4] = {-wheel_base/2, -wheel_base/2, wheel_base/2, wheel_base/2};
+        double y_sep[4] = {-wheel_separetion/2, wheel_separetion/2, -wheel_separetion/2, wheel_separetion/2};
 
+        double v_theta = 0;
+        for (auto i = 0; i < 4; i++)
+        {
+            v_theta += omega[i] * wheel_radius * (-y_sep[i] * cos(delta[i]) + x_sep[i] * sin(delta[i])) / (4 * (x_sep[i] * x_sep[i]) + 4 * (y_sep[i] * y_sep[i]));
+
+        }
+
+        theta_ += v_theta * delta_t;
+
+        double vx = 0;
+        double vy = 0;
+        for (auto index = 0; index < 4; index++)
+        {
+            vx += omega[index] * wheel_radius * cos(delta[index] + theta_) / 4;
+            vy += omega[index] * wheel_radius * sin(delta[index] + theta_) / 4;
+        }
+        
         //Update last values
         last_x_ = x_;
         last_y_ = y_;
         last_omega_ = theta_;
 
         // Update robot pose
-        theta_ += phi * delta_t;
-        x_ += vm * delta_t * cos(theta_);
-        y_ += vm * delta_t * sin(theta_);
-
+        x_ += vx * delta_t;
+        y_ += vy * delta_t;
 
         // Publish Odometry Message
         auto odom_msg = nav_msgs::msg::Odometry();
@@ -72,9 +90,9 @@ private:
         odom_msg.pose.pose.position.y = y_;
         odom_msg.pose.pose.position.z = 0.0;
 
-        odom_msg.twist.twist.linear.x = vm * cos(theta_);
-        odom_msg.twist.twist.linear.y = vm * sin(theta_);
-        odom_msg.twist.twist.angular.z = phi;
+        odom_msg.twist.twist.linear.x = vx;
+        odom_msg.twist.twist.linear.y = vy;
+        odom_msg.twist.twist.angular.z = v_theta;
 
         // Set orientation (convert theta to quaternion) 
         tf2::Quaternion q;
@@ -110,7 +128,7 @@ private:
 
     double x_, y_, theta_;   // Robot pose
     double last_x_, last_y_, last_omega_;  // Last computed velocities
-    double omega, delta;
+    double omega[4], delta[4];
 };
 
 int main(int argc, char *argv[])

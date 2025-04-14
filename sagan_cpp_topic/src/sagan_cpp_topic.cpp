@@ -26,17 +26,22 @@ private:
             for (int index = 0; index < 4; index++)
             {
                 message.wheel_cmd[index].angular_velocity = 10.0;
-                message.steering_cmd[index].angular_position = 15*3.14/180;
+                message.steering_cmd[index].angular_position = 30*3.14/180;
             }   
             MinimalPublisher::x = 1;
         }else{
             for (int index = 0; index < 4; index++)
             {
                 message.wheel_cmd[index].angular_velocity = 10.0;
-                message.steering_cmd[index].angular_position = 15*3.14/180;
+                message.steering_cmd[index].angular_position = 30*3.14/180;
             }  
         }
-        
+
+        // message.steering_cmd[0].angular_position = 0*3.14/180;
+        // message.steering_cmd[1].angular_position = 30*3.14/180;
+        // message.steering_cmd[2].angular_position = 60*3.14/180;
+        // message.steering_cmd[3].angular_position = 90*3.14/180;
+
         // Publish the message
         publisher_->publish(message);
 
