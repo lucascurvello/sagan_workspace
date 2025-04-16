@@ -15,7 +15,7 @@ class SaganOdometryNode : public rclcpp::Node
 public:
     SaganOdometryNode()
     : Node("sagan_odometry_node"),
-      x_(0.0), y_(0.0), theta_(0.0), last_x_(0.0), last_y_(0.0), last_omega_(0.0)  // Initialize robot position and orientation
+      x_(0.0), y_(0.0), theta_(0.0), last_x_(0.0), last_y_(0.0), last_theta_(0.0)  // Initialize robot position and orientation
     {
         // Subscriber to SaganStates topic
         subscription_ = this->create_subscription<sagan_interfaces::msg::SaganStates>(
@@ -39,7 +39,6 @@ private:
             omega[index] = msg->wheel_state[index].angular_velocity;
             delta[index] = msg->steering_state[index].angular_position;
         }
-        
     }
 
     void timer_callback()
@@ -53,14 +52,18 @@ private:
         double x_sep[4] = {-wheel_base/2, -wheel_base/2, wheel_base/2, wheel_base/2};
         double y_sep[4] = {-wheel_separetion/2, wheel_separetion/2, -wheel_separetion/2, wheel_separetion/2};
 
+        //Update last values
+        last_x_ = x_;
+        last_y_ = y_;
+        last_theta_ = theta_;
+        
         double v_theta = 0;
         for (auto i = 0; i < 4; i++)
         {
             v_theta += omega[i] * wheel_radius * (-y_sep[i] * cos(delta[i]) + x_sep[i] * sin(delta[i])) / (4 * (x_sep[i] * x_sep[i]) + 4 * (y_sep[i] * y_sep[i]));
-
         }
 
-        theta_ += v_theta * delta_t;
+        theta_ += 2.04203 * 1.002758041 * v_theta * delta_t;
 
         double vx = 0;
         double vy = 0;
@@ -69,11 +72,6 @@ private:
             vx += omega[index] * wheel_radius * cos(delta[index] + theta_) / 4;
             vy += omega[index] * wheel_radius * sin(delta[index] + theta_) / 4;
         }
-        
-        //Update last values
-        last_x_ = x_;
-        last_y_ = y_;
-        last_omega_ = theta_;
 
         // Update robot pose
         x_ += vx * delta_t;
@@ -90,9 +88,9 @@ private:
         odom_msg.pose.pose.position.y = y_;
         odom_msg.pose.pose.position.z = 0.0;
 
-        odom_msg.twist.twist.linear.x = vx;
-        odom_msg.twist.twist.linear.y = vy;
-        odom_msg.twist.twist.angular.z = v_theta;
+        odom_msg.twist.twist.linear.x = (x_ - last_x_) / 0.01;
+        odom_msg.twist.twist.linear.y = (y_ - last_y_) / 0.01;
+        odom_msg.twist.twist.angular.z = (theta_ - last_theta_) / 0.01;
 
         // Set orientation (convert theta to quaternion) 
         tf2::Quaternion q;
@@ -103,7 +101,7 @@ private:
 
         // Set velocities
         //odom_msg.twist.twist.linear.x = SaganOdometryNode::last_v_;
-        //odom_msg.twist.twist.angular.z = SaganOdometryNode::last_omega_;
+        //odom_msg.twist.twist.angular.z = SaganOdometryNode::last_theta_;
 
         // Broadcast Transform from odom to base_link
         geometry_msgs::msg::TransformStamped transform_stamped;
@@ -127,7 +125,7 @@ private:
     std::shared_ptr<tf2_ros::TransformBroadcaster> tf_broadcaster_;
 
     double x_, y_, theta_;   // Robot pose
-    double last_x_, last_y_, last_omega_;  // Last computed velocities
+    double last_x_, last_y_, last_theta_;  // Last computed velocities
     double omega[4], delta[4];
 };
 
