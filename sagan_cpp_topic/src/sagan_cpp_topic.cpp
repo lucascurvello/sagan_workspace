@@ -22,20 +22,31 @@ private:
     {
         auto message = sagan_interfaces::msg::SaganCmd();
 
-        if (MinimalPublisher::x == 0){
-            for (int index = 0; index < 4; index++)
-            {
-                message.wheel_cmd[index].angular_velocity = 10.0;
-                message.steering_cmd[index].angular_position = 30*3.14/180;
-            }   
-            MinimalPublisher::x = 1;
-        }else{
-            for (int index = 0; index < 4; index++)
-            {
-                message.wheel_cmd[index].angular_velocity = 10.0;
-                message.steering_cmd[index].angular_position = 30*3.14/180;
-            }  
-        }
+        for (int index = 0; index < 4; index++)
+        {
+            
+            message.steering_cmd[index].angular_position = 0.0*3.14/180;
+        }  
+        
+        for (int index = 0; index < 3; index = index + 2)
+        {
+            message.wheel_cmd[index + 1].angular_velocity = 10.0;
+            message.wheel_cmd[index].angular_velocity = 10.0;
+        }        
+        // if (MinimalPublisher::x == 0){
+        //     for (int index = 0; index < 4; index++)
+        //     {
+        //         message.wheel_cmd[index].angular_velocity = 10.0;
+        //         message.steering_cmd[index].angular_position = 30*3.14/180;
+        //     }   
+        //     MinimalPublisher::x = 1;
+        // }else{
+        //     for (int index = 0; index < 4; index++)
+        //     {
+        //         message.wheel_cmd[index].angular_velocity = 10.0;
+        //         message.steering_cmd[index].angular_position = 30*3.14/180;
+        //     }  
+        // }
 
         // message.steering_cmd[0].angular_position = 0*3.14/180;
         // message.steering_cmd[1].angular_position = 30*3.14/180;
