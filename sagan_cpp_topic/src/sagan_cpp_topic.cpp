@@ -30,7 +30,7 @@ private:
         
         for (int index = 0; index < 3; index = index + 2)
         {
-            message.wheel_cmd[index + 1].angular_velocity = 10.0;
+            message.wheel_cmd[index + 1].angular_velocity = 8.0;
             message.wheel_cmd[index].angular_velocity = 10.0;
         }        
         // if (MinimalPublisher::x == 0){

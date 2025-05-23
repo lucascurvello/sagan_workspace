@@ -55,7 +55,7 @@
  </joint>
   
   <xacro:property name="m_base" value="5.0"/>
-  <xacro:property name="m_wheel" value="0.0001"/>
+  <xacro:property name="m_wheel" value="0.5"/>
   <xacro:property name="m_arm" value="0.0001"/>
   <xacro:property name="m_steering_arm" value="0.0001"/>
   
@@ -63,9 +63,16 @@
   <xacro:property name="b" value="0.1"/>
   <xacro:property name="c" value="0.2"/>
 
+  <xacro:property name="r_wheel" value="0.06"/>
+  <xacro:property name="d_wheel" value="0.01"/>
+
   <xacro:property name="Ix_body" value="${(1/12)*m_base*(b*b+c*c)}"/>
   <xacro:property name="Iy_body" value="${(1/12)*m_base*(a*a+b*b)}"/>
   <xacro:property name="Iz_body" value="${(1/12)*m_base*(a*a+c*c)}"/>
+
+    <!-- Moments of inertia of the wheel -->
+  <xacro:property name="Iz_wheel" value="${0.5*m_wheel*r_wheel*r_wheel}"/>
+  <xacro:property name="I_wheel" value="${(1/12)*m_wheel*(3.0*r_wheel*r_wheel+d_wheel*d_wheel)}"/>
 
   <link
     name="base_link">
@@ -198,12 +205,12 @@
       <mass
         value="${m_wheel}" />
       <inertia
-        ixx="0.000783880205929948"
-        ixy="2.01226383831894E-09"
-        ixz="3.50299796044178E-07"
-        iyy="0.000783890492868903"
-        iyz="8.25793804944639E-07"
-        izz="0.00117428659094037" />
+        ixx="${I_wheel}"
+        ixy="0.0"
+        ixz="0.0"
+        iyy="${I_wheel}"
+        iyz="0.0"
+        izz="${Iz_wheel}" />
     </inertial>
     <visual>
       <origin
@@ -293,12 +300,12 @@
       <mass
         value="${m_wheel}" />
       <inertia
-        ixx="0.000783880202895659"
-        ixy="2.01039023766552E-09"
-        ixz="3.50300215103234E-07"
-        iyy="0.000783890487615817"
-        iyz="8.25795383820328E-07"
-        izz="0.00117428658587198" />
+        ixx="${I_wheel}"
+        ixy="0.0"
+        ixz="0.0"
+        iyy="${I_wheel}"
+        iyz="0.0"
+        izz="${Iz_wheel}" />
     </inertial>
     <visual>
       <origin
@@ -436,12 +443,12 @@
       <mass
         value="${m_wheel}" />
       <inertia
-        ixx="0.000783880202735922"
-        ixy="2.00980892579107E-09"
-        ixz="3.50299340077445E-07"
-        iyy="0.000783890489998166"
-        iyz="8.2579559371602E-07"
-        izz="0.00117428658659121" />
+        ixx="${I_wheel}"
+        ixy="0.0"
+        ixz="0.0"
+        iyy="${I_wheel}"
+        iyz="0.0"
+        izz="${Iz_wheel}" />
     </inertial>
     <visual>
       <origin
@@ -531,12 +538,12 @@
       <mass
         value="${m_wheel}" />
       <inertia
-        ixx="0.000783880200546954"
-        ixy="2.00979016523779E-09"
-        ixz="3.50298555520892E-07"
-        iyy="0.000783890492044935"
-        iyz="8.25796865403004E-07"
-        izz="0.00117428658750663" />
+        ixx="${I_wheel}"
+        ixy="0.0"
+        ixz="0.0"
+        iyy="${I_wheel}"
+        iyz="0.0"
+        izz="${Iz_wheel}" />
     </inertial>
     <visual>
       <origin
