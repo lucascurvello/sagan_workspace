@@ -4,6 +4,9 @@ from launch import LaunchDescription
 from launch.actions import IncludeLaunchDescription
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch_ros.actions import Node
+from launch.actions import DeclareLaunchArgument
+from launch.substitutions import LaunchConfiguration
+from ament_index_python.packages import get_package_share_directory
 import xacro
 
 def generate_launch_description():
@@ -22,6 +25,27 @@ def generate_launch_description():
 
     gazeboLaunch = IncludeLaunchDescription(gazebo_rosPackageLaunch, launch_arguments={"gz_args": [" -r -v -v4 " + os.path.join(get_package_share_directory("sagan_description"), "worlds/empty_world.sdf")], "on_exit_shutdown": "true"}.items())
     
+    rviz_config_path = os.path.join(
+        get_package_share_directory('sagan_description'),
+        'rviz',
+        'config.rviz'
+    )
+
+    rviz_arg = DeclareLaunchArgument(
+        name='rvizconfig',
+        default_value=rviz_config_path,
+        description='/home/lucas/sagan_workspace/sagan_description/rviz/config.rviz'
+    )
+
+    rviz_node = Node(
+        package='rviz2',
+        executable='rviz2',
+        name='rviz2',
+        output='screen',
+        arguments=['-d', LaunchConfiguration('rvizconfig')],
+        parameters=[{'use_sim_time': True}]
+    )
+
     spawnModelNodeGazebo = Node(
         package="ros_gz_sim",
         executable="create",
@@ -99,6 +123,8 @@ def generate_launch_description():
 
     launchDescriptionObject = LaunchDescription()
     
+    launchDescriptionObject.add_action(rviz_arg)
+
     launchDescriptionObject.add_action(gazeboLaunch)
     
     launchDescriptionObject.add_action(spawnModelNodeGazebo)
@@ -108,7 +134,8 @@ def generate_launch_description():
     launchDescriptionObject.add_action(diff_drive_base_controller_spawner)
     launchDescriptionObject.add_action(nodeSaganOdometry)
     launchDescriptionObject.add_action(nodeSaganEfk)
-    #launchDescriptionObject.add_action(nodeJointStatePublisher)
+    launchDescriptionObject.add_action(rviz_node)
+    launchDescriptionObject.add_action(nodeJointStatePublisher)
     return launchDescriptionObject
     
     
