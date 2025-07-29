@@ -29,6 +29,8 @@ public:
 
         // Timer for regular odom publishing
         timer_ = this->create_wall_timer(10ms, std::bind(&SaganOdometryNode::timer_callback, this));
+
+        last_time_ = this->now();
     }
 
 private:
@@ -43,14 +45,20 @@ private:
 
     void timer_callback()
     {
+        // Time computation
+        rclcpp::Time current_time = this->now();
+        double delta_t = (current_time - last_time_).seconds();
+        if (delta_t <= 0.0) {
+            delta_t = 1e-6;  // Avoid division by zero or negative time step
+        }
+
+        last_time_ = current_time;
+
         double wheel_radius = 0.06;
-        double wheel_base = 0.370; 
-        double wheel_separetion = 0.2975;
+        double wheel_base = 0.2975; 
+        double wheel_separetion = 0.370;
 
-        double delta_t = 0.01;  // Time step (could be obtained dynamically or use a constant)
-
-        double x_sep[4] = {-wheel_base/2, -wheel_base/2, wheel_base/2, wheel_base/2};
-        double y_sep[4] = {-wheel_separetion/2, wheel_separetion/2, -wheel_separetion/2, wheel_separetion/2};
+        // double delta_t = 0.01;  // Time step (could be obtained dynamically or use a constant)
 
         //Update last values
         last_x_ = x_;
@@ -58,20 +66,15 @@ private:
         last_theta_ = theta_;
         
         double v_theta = 0;
-        for (auto i = 0; i < 4; i++)
-        {
-            v_theta += omega[i] * wheel_radius * (-y_sep[i] * cos(delta[i]) + x_sep[i] * sin(delta[i])) / (4 * (x_sep[i] * x_sep[i]) + 4 * (y_sep[i] * y_sep[i]));
-        }
-
-        theta_ += 2.04203 * 1.002758041 * v_theta * delta_t;
-
         double vx = 0;
         double vy = 0;
-        for (auto index = 0; index < 4; index++)
-        {
-            vx += omega[index] * wheel_radius * cos(delta[index] + theta_) / 4;
-            vy += omega[index] * wheel_radius * sin(delta[index] + theta_) / 4;
-        }
+
+        v_theta = wheel_radius * (omega[0] - omega[1]) / wheel_base;
+
+        theta_ += v_theta * delta_t;
+
+        vx = wheel_radius * (omega[0] + omega[1])/2 * cos(theta_);
+        vy = wheel_radius * (omega[0] + omega[1])/2 * sin(theta_);
 
         // Update robot pose
         x_ += vx * delta_t;
@@ -88,9 +91,9 @@ private:
         odom_msg.pose.pose.position.y = y_;
         odom_msg.pose.pose.position.z = 0.0;
 
-        odom_msg.twist.twist.linear.x = (x_ - last_x_) / 0.01;
-        odom_msg.twist.twist.linear.y = (y_ - last_y_) / 0.01;
-        odom_msg.twist.twist.angular.z = (theta_ - last_theta_) / 0.01;
+        odom_msg.twist.twist.linear.x = (x_ - last_x_) / delta_t;
+        odom_msg.twist.twist.linear.y = (y_ - last_y_) / delta_t;
+        odom_msg.twist.twist.angular.z = (theta_ - last_theta_) / delta_t;
 
         // Set orientation (convert theta to quaternion) 
         tf2::Quaternion q;
@@ -98,10 +101,6 @@ private:
         q.normalize();
         geometry_msgs::msg::Quaternion msg_quat = tf2::toMsg(q);
         odom_msg.pose.pose.orientation = msg_quat;
-
-        // Set velocities
-        //odom_msg.twist.twist.linear.x = SaganOdometryNode::last_v_;
-        //odom_msg.twist.twist.angular.z = SaganOdometryNode::last_theta_;
 
         // Broadcast Transform from odom to base_link
         geometry_msgs::msg::TransformStamped transform_stamped;
@@ -127,6 +126,8 @@ private:
     double x_, y_, theta_;   // Robot pose
     double last_x_, last_y_, last_theta_;  // Last computed velocities
     double omega[4], delta[4];
+
+    rclcpp::Time last_time_;
 };
 
 int main(int argc, char *argv[])

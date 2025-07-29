@@ -36,28 +36,28 @@
     </gazebo>
 
     <gazebo reference="LF_wheel">
-        <mu1>100.0</mu1>
+        <mu1>50.0</mu1>
         <mu2>5.0</mu2>
         <fdir1>1 0 0</fdir1> 
         <material>Gazebo/Black</material>
     </gazebo>
 
     <gazebo reference="LR_wheel">
-        <mu1>100.0</mu1>
+        <mu1>50.0</mu1>
         <mu2>5.0</mu2>
         <fdir1>1 0 0</fdir1> 
         <material>Gazebo/Black</material>
     </gazebo>
 
     <gazebo reference="RF_wheel">
-        <mu1>100.0</mu1>
+        <mu1>50.0</mu1>
         <mu2>5.0</mu2>
         <fdir1>1 0 0</fdir1> 
         <material>Gazebo/Black</material>
     </gazebo>
 
     <gazebo reference="RR_wheel">
-        <mu1>100.0</mu1>
+        <mu1>50.0</mu1>
         <mu2>5.0</mu2>
         <fdir1>1 0 0</fdir1> 
         <material>Gazebo/Black</material>
