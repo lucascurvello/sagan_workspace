@@ -91,9 +91,9 @@ private:
         odom_msg.pose.pose.position.y = y_;
         odom_msg.pose.pose.position.z = 0.0;
 
-        odom_msg.twist.twist.linear.x = (x_ - last_x_) / delta_t;
-        odom_msg.twist.twist.linear.y = (y_ - last_y_) / delta_t;
-        odom_msg.twist.twist.angular.z = (theta_ - last_theta_) / delta_t;
+        odom_msg.twist.twist.linear.x = vx;//(x_ - last_x_) / delta_t;
+        odom_msg.twist.twist.linear.y = vy;//(y_ - last_y_) / delta_t;
+        odom_msg.twist.twist.angular.z = v_theta;//(theta_ - last_theta_) / delta_t;
 
         // Set orientation (convert theta to quaternion) 
         tf2::Quaternion q;

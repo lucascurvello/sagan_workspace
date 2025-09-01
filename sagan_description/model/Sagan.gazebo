@@ -39,7 +39,7 @@
         <mu1>10.0</mu1>
         <mu2>1.0</mu2>
         <fdir1>1 0 0</fdir1> 
-        <soft_cfm>0.0</soft_cfm>
+        <soft_cfm>0.1</soft_cfm>
         <soft_erp>0.2</soft_erp>
         <kp>1e15</kp>
         <kd>4e12</kd>
@@ -52,7 +52,7 @@
         <mu1>10.0</mu1>
         <mu2>1.0</mu2>
         <fdir1>1 0 0</fdir1>
-        <soft_cfm>0.0</soft_cfm>
+        <soft_cfm>0.1</soft_cfm>
         <soft_erp>0.2</soft_erp>
         <kp>1e15</kp>
         <kd>4e12</kd>
@@ -65,7 +65,7 @@
         <mu1>10.0</mu1>
         <mu2>1.0</mu2>
         <fdir1>1 0 0</fdir1>
-        <soft_cfm>0.0</soft_cfm>
+        <soft_cfm>0.1</soft_cfm>
         <soft_erp>0.2</soft_erp>
         <kp>1e15</kp>
         <kd>4e12</kd>
@@ -78,7 +78,7 @@
         <mu1>10.0</mu1>
         <mu2>1.0</mu2>
         <fdir1>1 0 0</fdir1>
-        <soft_cfm>0.0</soft_cfm>
+        <soft_cfm>0.1</soft_cfm>
         <soft_erp>0.2</soft_erp>
         <kp>1e15</kp>
         <kd>4e12</kd>
@@ -100,7 +100,7 @@
         <plugin filename="gz-sim-odometry-publisher-system" name="gz::sim::systems::OdometryPublisher">
             <odom_frame>odom</odom_frame>
             <robot_base_frame>gz_reference</robot_base_frame>
-            <odom_publish_frequency>50</odom_publish_frequency>
+            <odom_publish_frequency>1000</odom_publish_frequency>
         </plugin>
     </gazebo>
    
