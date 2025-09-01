@@ -36,30 +36,54 @@
     </gazebo>
 
     <gazebo reference="LF_wheel">
-        <mu1>50.0</mu1>
-        <mu2>5.0</mu2>
+        <mu1>10.0</mu1>
+        <mu2>1.0</mu2>
         <fdir1>1 0 0</fdir1> 
+        <soft_cfm>0.0</soft_cfm>
+        <soft_erp>0.2</soft_erp>
+        <kp>1e15</kp>
+        <kd>4e12</kd>
+        <minDepth>0.001</minDepth>
+        <selfCollide>true</selfCollide>
         <material>Gazebo/Black</material>
     </gazebo>
 
     <gazebo reference="LR_wheel">
-        <mu1>50.0</mu1>
-        <mu2>5.0</mu2>
-        <fdir1>1 0 0</fdir1> 
+        <mu1>10.0</mu1>
+        <mu2>1.0</mu2>
+        <fdir1>1 0 0</fdir1>
+        <soft_cfm>0.0</soft_cfm>
+        <soft_erp>0.2</soft_erp>
+        <kp>1e15</kp>
+        <kd>4e12</kd>
+        <minDepth>0.001</minDepth>
+        <selfCollide>true</selfCollide>
         <material>Gazebo/Black</material>
     </gazebo>
 
     <gazebo reference="RF_wheel">
-        <mu1>50.0</mu1>
-        <mu2>5.0</mu2>
-        <fdir1>1 0 0</fdir1> 
+        <mu1>10.0</mu1>
+        <mu2>1.0</mu2>
+        <fdir1>1 0 0</fdir1>
+        <soft_cfm>0.0</soft_cfm>
+        <soft_erp>0.2</soft_erp>
+        <kp>1e15</kp>
+        <kd>4e12</kd>
+        <minDepth>0.001</minDepth>
+        <selfCollide>true</selfCollide>
         <material>Gazebo/Black</material>
     </gazebo>
 
     <gazebo reference="RR_wheel">
-        <mu1>50.0</mu1>
-        <mu2>5.0</mu2>
-        <fdir1>1 0 0</fdir1> 
+        <mu1>10.0</mu1>
+        <mu2>1.0</mu2>
+        <fdir1>1 0 0</fdir1>
+        <soft_cfm>0.0</soft_cfm>
+        <soft_erp>0.2</soft_erp>
+        <kp>1e15</kp>
+        <kd>4e12</kd>
+        <minDepth>0.001</minDepth>
+        <selfCollide>true</selfCollide>
         <material>Gazebo/Black</material>
     </gazebo>
 

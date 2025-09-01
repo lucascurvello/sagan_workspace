@@ -55,7 +55,7 @@ private:
         last_time_ = current_time;
 
         double wheel_radius = 0.06;
-        double wheel_base = 0.2975; 
+        double wheel_base = 0.370; 
         double wheel_separetion = 0.370;
 
         // double delta_t = 0.01;  // Time step (could be obtained dynamically or use a constant)

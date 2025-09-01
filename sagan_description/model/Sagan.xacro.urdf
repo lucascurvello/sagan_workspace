@@ -118,12 +118,12 @@
       <mass
         value="${m_arm}" />
       <inertia
-        ixx="0.000175345646863428"
-        ixy="-1.7813545791169E-09"
-        ixz="-1.62285103479538E-09"
-        iyy="0.000368001853138293"
-        iyz="3.61191220584774E-05"
-        izz="0.000308905475527299" />
+        ixx="0.0"
+        ixy="0.0"
+        ixz="0.0"
+        iyy="0.0"
+        iyz="0.0"
+        izz="0.0" />
     </inertial>
     <visual>
       <origin
@@ -166,12 +166,12 @@
       <mass
         value="${m_steering_arm}" />
       <inertia
-        ixx="0.00107939387445048"
-        ixy="-5.88026814841312E-06"
-        ixz="-8.44777124047921E-06"
-        iyy="0.000702333595947727"
-        iyz="-6.92236230546448E-06"
-        izz="0.000699127155841569" />
+        ixx="0.0"
+        ixy="0.0"
+        ixz="0.0"
+        iyy="0.0"
+        iyz="0.0"
+        izz="0.0" />
     </inertial>
     <visual>
       <origin
@@ -226,17 +226,8 @@
         xyz="0 0 0"
         rpy="0 0 0" />
       <geometry>
-        <cylinder radius="0.06" length="0.01"/>
+        <sphere radius="0.06" />
       </geometry>  
-      <surface>
-        <contact>
-          <ode>
-            <min_depth>0.1</min_depth> <!-- This is what you're looking for -->
-            <kp>100000</kp>              <!-- Contact stiffness -->
-            <kd>5.0</kd>                 <!-- Contact damping -->
-          </ode>
-        </contact>
-      </surface>
     </collision>
   </link>
   <joint
@@ -261,12 +252,12 @@
       <mass
         value="${m_steering_arm}" />
       <inertia
-        ixx="0.00107939385640447"
-        ixy="5.88023069536254E-06"
-        ixz="8.44785009774513E-06"
-        iyy="0.000702333593444471"
-        iyz="-6.92236387321353E-06"
-        izz="0.000699127138546282" />
+        ixx="0.0"
+        ixy="0.0"
+        ixz="0.0"
+        iyy="0.0"
+        iyz="0.0"
+        izz="0.0" />
     </inertial>
     <visual>
       <origin
@@ -321,17 +312,8 @@
         xyz="0 0 0"
         rpy="0 0 0" />
       <geometry>
-        <cylinder radius="0.06" length="0.01"/>
+        <sphere radius="0.06" />
       </geometry> 
-      <surface>
-        <contact>
-          <ode>
-            <min_depth>0.1</min_depth> <!-- This is what you're looking for -->
-            <kp>100000</kp>              <!-- Contact stiffness -->
-            <kd>5.0</kd>                 <!-- Contact damping -->
-          </ode>
-        </contact>
-      </surface> 
     </collision>
   </link>
   <joint
@@ -356,12 +338,12 @@
       <mass
         value="${m_arm}" />
       <inertia
-        ixx="0.000175345733789824"
-        ixy="-1.77340464963269E-09"
-        ixz="-1.54958700577145E-09"
-        iyy="0.000368001964224144"
-        iyz="3.61191345471842E-05"
-        izz="0.000308905461159352" />
+        ixx="0.0"
+        ixy="0.0"
+        ixz="0.0"
+        iyy="0.0"
+        iyz="0.0"
+        izz="0.0" />
     </inertial>
     <visual>
       <origin
@@ -404,12 +386,12 @@
       <mass
         value="${m_steering_arm}"/>
       <inertia
-        ixx="0.00107939385625459"
-        ixy="5.88023119472766E-06"
-        ixz="8.44784884753844E-06"
-        iyy="0.000702333593373311"
-        iyz="-6.92236413867083E-06"
-        izz="0.000699127138390781" />
+        ixx="0.0"
+        ixy="0.0"
+        ixz="0.0"
+        iyy="0.0"
+        iyz="0.0"
+        izz="0.0" />
     </inertial>
     <visual>
       <origin
@@ -464,17 +446,8 @@
         xyz="0 0 0"
         rpy="0 0 0" />
       <geometry>
-        <cylinder radius="0.06" length="0.01"/>
-      </geometry> 
-      <surface>
-        <contact>
-          <ode>
-            <min_depth>0.1</min_depth> <!-- This is what you're looking for -->
-            <kp>100000</kp>              <!-- Contact stiffness -->
-            <kd>5.0</kd>                 <!-- Contact damping -->
-          </ode>
-        </contact>
-      </surface> 
+        <sphere radius="0.06" />
+      </geometry>  
     </collision>
   </link>
   <joint
@@ -499,12 +472,12 @@
       <mass
         value="${m_steering_arm}" />
       <inertia
-        ixx="0.00107939387504091"
-        ixy="-5.88026822050424E-06"
-        ixz="-8.44777251653618E-06"
-        iyy="0.000702333595442633"
-        iyz="-6.92236202269723E-06"
-        izz="0.000699127154714819" />
+        ixx="0.0"
+        ixy="0.0"
+        ixz="0.0"
+        iyy="0.0"
+        iyz="0.0"
+        izz="0.0" />
     </inertial>
     <visual>
       <origin
@@ -559,17 +532,8 @@
         xyz="0 0 0"
         rpy="0 0 0" />
       <geometry>
-        <cylinder radius="0.06" length="0.01"/>
+        <sphere radius="0.06" />
       </geometry> 
-      <surface>
-        <contact>
-          <ode>
-            <min_depth>0.1</min_depth> <!-- This is what you're looking for -->
-            <kp>100000</kp>              <!-- Contact stiffness -->
-            <kd>5.0</kd>                 <!-- Contact damping -->
-          </ode>
-        </contact>
-      </surface> 
     </collision>
   </link>
   <joint
