@@ -22,7 +22,7 @@ SaganKalmanFilter::SaganKalmanFilter()
                0, 0.1, 0,
                0, 0, 0.1;
 
-    R_imu_(0,0) = 0.5;
+    R_imu_(0,0) = 0.05;
 
     last_time_ = this->get_clock()->now();
 
@@ -35,6 +35,9 @@ SaganKalmanFilter::SaganKalmanFilter()
 
     // Publisher
     fused_odom_pub_ = this->create_publisher<nav_msgs::msg::Odometry>("/odom/filtered", 10);
+
+    // Initialize transform broadcaster
+    tf_broadcaster_ = std::make_shared<tf2_ros::TransformBroadcaster>(this);
 
     RCLCPP_INFO(this->get_logger(), "Kalman Filter Node has been started.");
 }
@@ -110,10 +113,10 @@ void SaganKalmanFilter::odom_callback(const nav_msgs::msg::Odometry::SharedPtr m
     double x_pos = msg->pose.pose.position.x;
     double y_pos = msg->pose.pose.position.y;
     tf2::Quaternion q(
-        msg->pose.pose.orientation.x,
-        msg->pose.pose.orientation.y,
-        msg->pose.pose.orientation.z,
-        msg->pose.pose.orientation.w);
+    msg->pose.pose.orientation.x,
+    msg->pose.pose.orientation.y,
+    msg->pose.pose.orientation.z,
+    msg->pose.pose.orientation.w);
     tf2::Matrix3x3 m(q);
     double roll, pitch, yaw;
     m.getRPY(roll, pitch, yaw);
@@ -139,6 +142,8 @@ void SaganKalmanFilter::imu_callback(const sensor_msgs::msg::Imu::SharedPtr msg)
 
 void SaganKalmanFilter::publish_fused_odometry()
 {
+    
+    
     auto msg = nav_msgs::msg::Odometry();
     msg.header.stamp = this->get_clock()->now();
     msg.header.frame_id = "odom";
@@ -171,7 +176,18 @@ void SaganKalmanFilter::publish_fused_odometry()
     msg.twist.covariance[0*6+0] = P_(3,3);
     msg.twist.covariance[5*6+5] = P_(4,4);
 
+    // Broadcast Transform from odom to base_link
+    geometry_msgs::msg::TransformStamped transform_stamped;
+    transform_stamped.header.stamp = this->get_clock()->now();
+    transform_stamped.header.frame_id = "odom";
+    transform_stamped.child_frame_id = "efk_reference";
+    transform_stamped.transform.translation.x = x_(0);
+    transform_stamped.transform.translation.y = x_(1);
+    transform_stamped.transform.translation.z = 0.0;
+    transform_stamped.transform.rotation= tf2::toMsg(q);
+
     fused_odom_pub_->publish(msg);
+    tf_broadcaster_->sendTransform(transform_stamped);
 }
 
 int main(int argc, char * argv[])
