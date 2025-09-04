@@ -58,6 +58,8 @@ private:
         double wheel_base = 0.370; 
         double wheel_separetion = 0.370;
 
+        double slipage_coefficient = 0.166508;
+
         // double delta_t = 0.01;  // Time step (could be obtained dynamically or use a constant)
 
         //Update last values
@@ -66,15 +68,20 @@ private:
         last_theta_ = theta_;
         
         double v_theta = 0;
+        double v_forward = 0;
+        double v_lateral = 0;
         double vx = 0;
         double vy = 0;
+    
 
         v_theta = wheel_radius * (omega[0] - omega[1]) / wheel_base;
+        v_forward = wheel_radius * (omega[0] + omega[1])/2;
+        v_lateral = slipage_coefficient * v_theta;
 
         theta_ += v_theta * delta_t;
 
-        vx = wheel_radius * (omega[0] + omega[1])/2 * cos(theta_);
-        vy = wheel_radius * (omega[0] + omega[1])/2 * sin(theta_);
+        vx = v_forward * cos(theta_) + v_lateral * sin(theta_);
+        vy = v_forward * sin(theta_) - v_lateral * cos(theta_);
 
         // Update robot pose
         x_ += vx * delta_t;

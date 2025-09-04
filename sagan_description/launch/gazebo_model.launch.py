@@ -79,6 +79,13 @@ def generate_launch_description():
         parameters=[os.path.join(get_package_share_directory("sagan_description"), "parameters/sagan_ekf.yaml"), {"use_sim_time": True}],
     )
 
+    nodeSaganKF = Node(
+        package='sagan_kalman_filter',
+        executable='sagan_kalman_filter',
+        output='screen',
+        parameters=[{"use_sim_time": True}],
+    )
+
 
     bridge_params = os.path.join(
     get_package_share_directory(namePackage),
@@ -107,7 +114,8 @@ def generate_launch_description():
     launchDescriptionObject.add_action(joint_state_broadcaster_spawner)
     launchDescriptionObject.add_action(diff_drive_base_controller_spawner)
     launchDescriptionObject.add_action(nodeSaganOdometry)
-    launchDescriptionObject.add_action(nodeSaganEfk)
+    #launchDescriptionObject.add_action(nodeSaganEfk)
+    launchDescriptionObject.add_action(nodeSaganKF)
     #launchDescriptionObject.add_action(nodeJointStatePublisher)
     return launchDescriptionObject
     
