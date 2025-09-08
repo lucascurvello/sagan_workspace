@@ -5,16 +5,18 @@ SaganKalmanFilter::SaganKalmanFilter()
 : Node("sagan_kalman_filter")
 {
     // Initialize state and covariance
-    x_ = Eigen::Matrix<double, 5, 1>::Zero();
-    P_ = Eigen::Matrix<double, 5, 5>::Identity() * 1000.0;
+    x_ = Eigen::Matrix<double, 7, 1>::Zero();
+    P_ = Eigen::Matrix<double, 7, 7>::Identity() * 1000.0;
 
     // Process noise covariance
-    Q_ = Eigen::Matrix<double, 5, 5>::Identity();
-    Q_ << 0.01, 0, 0, 0, 0,
-          0, 0.01, 0, 0, 0,
-          0, 0, 0.01, 0, 0,
-          0, 0, 0, 0.1, 0,
-          0, 0, 0, 0, 0.1;
+    Q_ = Eigen::Matrix<double, 7, 7>::Identity();
+    Q_ << 0.01, 0, 0, 0, 0, 0, 0,
+          0, 0.01, 0, 0, 0, 0, 0,
+          0, 0, 0.01, 0, 0, 0, 0,
+          0, 0, 0, 0.10, 0, 0, 0,
+          0, 0, 0, 0, 0.10, 0, 0,
+          0, 0, 0, 0, 0, 0.10, 0,
+          0, 0, 0, 0, 0, 0, 0.10;
 
     // Measurement noise covariance
     R_odom_ = Eigen::Matrix<double, 3, 3>::Identity();
@@ -22,7 +24,10 @@ SaganKalmanFilter::SaganKalmanFilter()
                0, 0.1, 0,
                0, 0, 0.1;
 
-    R_imu_(0,0) = 0.05;
+    R_imu_ = Eigen::Matrix<double, 3, 3>::Identity();
+    R_imu_ << 0.1, 0, 0,
+              0, 0.1, 0,
+              0, 0, 0.1;
 
     last_time_ = this->get_clock()->now();
 

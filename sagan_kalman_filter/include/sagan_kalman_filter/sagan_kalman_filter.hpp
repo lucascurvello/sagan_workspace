@@ -18,8 +18,8 @@ public:
     SaganKalmanFilter();
 
 private:
-    // State vector: [x, y, theta, v, omega]^T
-    Eigen::Matrix<double, 5, 1> x_;
+    // State vector: [x, y, theta, v, omega, d²x, d²y]^T
+    Eigen::Matrix<double, 7, 1> x_;
     // State covariance matrix
     Eigen::Matrix<double, 5, 5> P_;
     // Process noise covariance
@@ -27,7 +27,7 @@ private:
     // Measurement noise covariance for odometry
     Eigen::Matrix<double, 3, 3> R_odom_;
     // Measurement noise covariance for IMU
-    Eigen::Matrix<double, 1, 1> R_imu_;
+    Eigen::Matrix<double, 3, 3> R_imu_;
 
     rclcpp::Time last_time_;
 
@@ -46,7 +46,7 @@ private:
     // Kalman Filter steps
     void predict(double dt);
     void update_odom(const Eigen::Matrix<double, 3, 1>& z);
-    void update_imu(const Eigen::Matrix<double, 1, 1>& z);
+    void update_imu(const Eigen::Matrix<double, 3, 1>& z);
 
     // Helper function
     void publish_fused_odometry();
