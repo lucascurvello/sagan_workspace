@@ -5,24 +5,28 @@ SaganKalmanFilter::SaganKalmanFilter()
 : Node("sagan_kalman_filter")
 {
     // Initialize state and covariance
-    x_ = Eigen::Matrix<double, 7, 1>::Zero();
-    P_ = Eigen::Matrix<double, 7, 7>::Identity() * 1000.0;
+    x_ = Eigen::Matrix<double, 8, 1>::Zero();
+    P_ = Eigen::Matrix<double, 8, 8>::Identity() * 1000.0;
 
     // Process noise covariance
-    Q_ = Eigen::Matrix<double, 7, 7>::Identity();
-    Q_ << 0.01, 0, 0, 0, 0, 0, 0,
-          0, 0.01, 0, 0, 0, 0, 0,
-          0, 0, 0.01, 0, 0, 0, 0,
-          0, 0, 0, 0.10, 0, 0, 0,
-          0, 0, 0, 0, 0.10, 0, 0,
-          0, 0, 0, 0, 0, 0.10, 0,
-          0, 0, 0, 0, 0, 0, 0.10;
+    Q_ = Eigen::Matrix<double, 8, 8>::Identity();
+    Q_ << 0.01, 0, 0, 0, 0, 0, 0, 0,
+          0, 0.01, 0, 0, 0, 0, 0, 0,
+          0, 0, 0.01, 0, 0, 0, 0, 0,
+          0, 0, 0, 0.10, 0, 0, 0, 0,
+          0, 0, 0, 0, 0.10, 0, 0, 0,
+          0, 0, 0, 0, 0, 0.10, 0, 0,
+          0, 0, 0, 0, 0, 0, 0.10, 0,
+          0, 0, 0, 0, 0, 0, 0, 0.10;
 
     // Measurement noise covariance
-    R_odom_ = Eigen::Matrix<double, 3, 3>::Identity();
-    R_odom_ << 0.1, 0, 0,
-               0, 0.1, 0,
-               0, 0, 0.1;
+    R_odom_ = Eigen::Matrix<double, 6, 6>::Identity();
+    R_odom_ << 0.1, 0, 0, 0, 0, 0,
+               0, 0.1, 0, 0, 0, 0,
+               0, 0, 0.1, 0, 0, 0,
+               0, 0, 0, 0.1, 0, 0,
+               0, 0, 0, 0, 0.1, 0,
+               0, 0, 0, 0, 0, 0.1;
 
     R_imu_ = Eigen::Matrix<double, 3, 3>::Identity();
     R_imu_ << 0.1, 0, 0,
@@ -49,56 +53,83 @@ SaganKalmanFilter::SaganKalmanFilter()
 
 void SaganKalmanFilter::predict(double dt)
 {
-    double v = x_(3);
-    double theta = x_(2);
+    double vx = x_(2);
+    double vy = x_(3);
+    double ax = x_(4);
+    double ay = x_(5);
+    double theta = x_(6);
+    double omega = x_(7);
+
+    // Pre-calculate sin and cos of theta
+    double ct = std::cos(theta);
+    double st = std::sin(theta);
+    double dt2 = dt * dt;
 
     // State transition matrix F
-    Eigen::Matrix<double, 5, 5> F = Eigen::Matrix<double, 5, 5>::Identity();
-    F(0, 2) = -v * sin(theta) * dt;
-    F(0, 3) = cos(theta) * dt;
-    F(1, 2) = v * cos(theta) * dt;
-    F(1, 3) = sin(theta) * dt;
+    Eigen::Matrix<double, 8, 8> F = Eigen::Matrix<double, 8, 8>::Identity();
+    F(0, 2) = cos(theta) * dt;
+    F(0, 3) = -sin(theta) * dt;
+    F(0, 4) = 0.5 * ct * dt2;
+    F(0, 5) = -0.5 * st * dt2;
+    F(0, 6) = (-vx * st - vy * ct) * dt + 0.5 * (-ax * st - ay * ct) * dt2;
+    F(1, 2) = st * dt;
+    F(1, 3) = ct * dt;
+    F(1, 4) = 0.5 * st * dt2;
+    F(1, 5) = 0.5 * ct * dt2;
+    F(1, 6) = (vx * ct - vy * st) * dt + 0.5 * (ax * ct - ay * st) * dt2;
     F(2, 4) = dt;
+    F(3, 5) = dt;
+    F(6, 7) = dt;
 
     // Predict state
-    Eigen::Matrix<double, 5, 1> x_pred = x_;
-    x_pred(0) = x_(0) + x_(3) * cos(x_(2)) * dt;
-    x_pred(1) = x_(1) + x_(3) * sin(x_(2)) * dt;
-    x_pred(2) = x_(2) + x_(4) * dt;
+    Eigen::Matrix<double, 8, 1> x_pred = x_;
+    x_pred(0) = x_(0) + (vx*cos(theta) - vy*sin(theta))*dt + 0.5*(ax*cos(theta) - ay*sin(theta))*dt^2;
+    x_pred(1) = x_(1) + (vx*sin(theta) + vy*cos(theta))*dt + 0.5*(ax*sin(theta) + ay*cos(theta))*dt^2;
+    x_pred(2) = vx + ax * dt;
+    x_pred(3) = vy + ay * dt;
+    x_pred(4) = ax;
+    x_pred(5) = ay;
+    x_pred(6) = theta + omega * dt;
+    x_pred(7) = omega;
     x_ = x_pred;
     
     // Predict covariance
     P_ = F * P_ * F.transpose() + Q_;
 }
 
-void SaganKalmanFilter::update_odom(const Eigen::Matrix<double, 3, 1>& z)
+void SaganKalmanFilter::update_odom(const Eigen::Matrix<double, 6, 1>& z)
 {
     // Measurement matrix H for odometry
-    Eigen::Matrix<double, 3, 5> H;
-    H << 1, 0, 0, 0, 0,
-         0, 1, 0, 0, 0,
-         0, 0, 1, 0, 0;
+    Eigen::Matrix<double, 6, 8> H;
+    H << 1, 0, 0, 0, 0, 0, 0, 0,
+         0, 1, 0, 0, 0, 0, 0, 0,
+         0, 0, 1, 0, 0, 0, 0, 0,
+         0, 0, 0, 1, 0, 0, 0, 0,
+         0, 0, 0, 0, 0, 0, 1, 0,
+         0, 0, 0, 0, 0, 0, 0, 1;
 
-    Eigen::Matrix<double, 3, 1> y = z - H * x_;
-    Eigen::Matrix<double, 3, 3> S = H * P_ * H.transpose() + R_odom_;
-    Eigen::Matrix<double, 5, 3> K = P_ * H.transpose() * S.inverse();
+    Eigen::Matrix<double, 6, 1> y = z - H * x_;
+    Eigen::Matrix<double, 6, 6> S = H * P_ * H.transpose() + R_odom_;
+    Eigen::Matrix<double, 8, 6> K = P_ * H.transpose() * S.inverse();
 
     x_ = x_ + K * y;
-    P_ = (Eigen::Matrix<double, 5, 5>::Identity() - K * H) * P_;
+    P_ = (Eigen::Matrix<double, 8, 8>::Identity() - K * H) * P_;
 }
 
-void SaganKalmanFilter::update_imu(const Eigen::Matrix<double, 1, 1>& z)
+void SaganKalmanFilter::update_imu(const Eigen::Matrix<double, 3, 1>& z)
 {
     // Measurement matrix H for IMU
-    Eigen::Matrix<double, 1, 5> H;
-    H << 0, 0, 0, 0, 1;
+    Eigen::Matrix<double, 3, 8> H;
+    H << 0, 0, 0, 0, 1, 0, 0, 0,
+         0, 0, 0, 0, 0, 1, 0, 0,
+         0, 0, 0, 0, 0, 0, 0, 1;
 
-    Eigen::Matrix<double, 1, 1> y = z - H * x_;
-    Eigen::Matrix<double, 1, 1> S = H * P_ * H.transpose() + R_imu_;
-    Eigen::Matrix<double, 5, 1> K = P_ * H.transpose() * S.inverse();
+    Eigen::Matrix<double, 3, 1> y = z - H * x_;
+    Eigen::Matrix<double, 3, 3> S = H * P_ * H.transpose() + R_imu_;
+    Eigen::Matrix<double, 8, 3> K = P_ * H.transpose() * S.inverse();
 
     x_ = x_ + K * y;
-    P_ = (Eigen::Matrix<double, 5, 5>::Identity() - K * H) * P_;
+    P_ = (Eigen::Matrix<double, 8, 8>::Identity() - K * H) * P_;
 }
 
 void SaganKalmanFilter::odom_callback(const nav_msgs::msg::Odometry::SharedPtr msg)
