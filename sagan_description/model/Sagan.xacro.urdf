@@ -12,6 +12,8 @@
    
   <link name="efk_reference"></link>
 
+  <link name="noise_odometry"> </link>
+
   <!--
    <link name="world"/>
   <joint name="world_to_odom" type="continuous">
@@ -37,6 +39,12 @@
   <joint name="odom_efk_joint" type="fixed">
         <parent link="odom"/>
         <child link="efk_reference"/>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+  </joint> 
+
+  <joint name="odom_noise_joint" type="fixed">
+        <parent link="odom"/>
+        <child link="noise_odometry"/>
         <origin xyz="0 0 0" rpy="0 0 0"/>
   </joint> 
   
