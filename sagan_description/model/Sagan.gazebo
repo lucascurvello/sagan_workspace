@@ -93,6 +93,25 @@
             <update_rate>1000</update_rate>
             <visualize>true</visualize>
             <topic>imu</topic>
+            <noise>
+            <type>gaussian</type>
+            
+            <!-- Noise parameters for angular velocity (rate) -->
+            <rate>
+                <mean>0.0</mean>
+                <stddev>2e-4</stddev>
+                <bias_mean>0.0000075</bias_mean>
+                <bias_stddev>0.0000008</bias_stddev>
+            </rate>
+            
+            <!-- Noise parameters for linear acceleration -->
+            <accel>
+                <mean>0.0</mean>
+                <stddev>1.7e-2</stddev>
+                <bias_mean>0.1</bias_mean>
+                <bias_stddev>0.001</bias_stddev>
+            </accel>
+        </noise>
         </sensor>
     </gazebo>
 

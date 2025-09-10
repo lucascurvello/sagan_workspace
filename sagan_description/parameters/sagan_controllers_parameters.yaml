@@ -1,6 +1,6 @@
 controller_manager:
   ros__parameters:
-    update_rate: 100
+    update_rate: 1000
 
     sagan_drive_controller:
      type: sagan_drive_controller/SaganDriverController

@@ -20,7 +20,7 @@ SaganOdometryNode::SaganOdometryNode()
         delta_[i] = 0.0;
     }
 
-    this->declare_parameter<double>("wheel_velocity_noise_scaler", 0.03);
+    this->declare_parameter<double>("wheel_velocity_noise_scaler", 0.02);
     this->get_parameter("wheel_velocity_noise_scaler", wheel_velocity_noise_scaler_);
 
     subscription_ = this->create_subscription<sagan_interfaces::msg::SaganStates>(

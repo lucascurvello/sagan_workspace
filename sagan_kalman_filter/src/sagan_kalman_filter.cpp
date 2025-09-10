@@ -11,10 +11,10 @@ SaganKalmanFilter::SaganKalmanFilter()
 
     // Process noise covariance
     Q_ = Eigen::Matrix<double, 8, 8>::Identity();
-    Q_ << 1, 0, 0, 0, 0, 0, 0, 0,
-          0, 1, 0, 0, 0, 0, 0, 0,
-          0, 0, 1, 0, 0, 0, 0, 0,
-          0, 0, 0, 1, 0, 0, 0, 0,
+    Q_ << 0.01, 0, 0, 0, 0, 0, 0, 0,
+          0, 0.01, 0, 0, 0, 0, 0, 0,
+          0, 0, 0.1, 0, 0, 0, 0, 0,
+          0, 0, 0, 0.001, 0, 0, 0, 0,
           0, 0, 0, 0, 1, 0, 0, 0,
           0, 0, 0, 0, 0, 1, 0, 0,
           0, 0, 0, 0, 0, 0, 1, 0,
@@ -22,17 +22,17 @@ SaganKalmanFilter::SaganKalmanFilter()
 
     // Measurement noise covariance
     R_odom_ = Eigen::Matrix<double, 6, 6>::Identity();
-    R_odom_ << 1, 0, 0, 0, 0, 0,
-               0, 1, 0, 0, 0, 0,
-               0, 0, 1, 0, 0, 0,
-               0, 0, 0, 1, 0, 0,
-               0, 0, 0, 0, 1, 0,
-               0, 0, 0, 0, 0, 1;
+    R_odom_ << 10e9, 0, 0, 0, 0, 0,
+               0, 10e9, 0, 0, 0, 0,
+               0, 0, 100, 0, 0, 0,
+               0, 0, 0, 100, 0, 0,
+               0, 0, 0, 0, 10e9, 0,
+               0, 0, 0, 0, 0, 100;
 
     R_imu_ = Eigen::Matrix<double, 3, 3>::Identity();
-    R_imu_ << 1, 0, 0,
-              0, 1, 0,
-              0, 0, 1;
+    R_imu_ << 0.1, 0, 0,
+              0, 10e9, 0,
+              0, 0, 0.1;
 
     last_time_ = this->get_clock()->now();
 
@@ -171,8 +171,8 @@ void SaganKalmanFilter::odom_callback(const nav_msgs::msg::Odometry::SharedPtr m
 
 void SaganKalmanFilter::imu_callback(const sensor_msgs::msg::Imu::SharedPtr msg)
 {
-    double ax = msg->linear_acceleration.x;
-    double ay = msg->linear_acceleration.y;
+    double ax = -msg->linear_acceleration.x;
+    double ay = -msg->linear_acceleration.y;
     double omega_imu = msg->angular_velocity.z;
 
     Eigen::Matrix<double, 3, 1> z_imu;
