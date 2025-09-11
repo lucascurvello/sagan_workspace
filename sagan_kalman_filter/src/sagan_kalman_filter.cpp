@@ -11,14 +11,14 @@ SaganKalmanFilter::SaganKalmanFilter()
 
     // Process noise covariance
     Q_ = Eigen::Matrix<double, 8, 8>::Identity();
-    Q_ << 0.01, 0, 0, 0, 0, 0, 0, 0,
-          0, 0.01, 0, 0, 0, 0, 0, 0,
+    Q_ << 0.1, 0, 0, 0, 0, 0, 0, 0,
+          0, 0.1, 0, 0, 0, 0, 0, 0,
           0, 0, 0.1, 0, 0, 0, 0, 0,
-          0, 0, 0, 0.001, 0, 0, 0, 0,
+          0, 0, 0, 0.1, 0, 0, 0, 0,
           0, 0, 0, 0, 1, 0, 0, 0,
           0, 0, 0, 0, 0, 1, 0, 0,
-          0, 0, 0, 0, 0, 0, 1, 0,
-          0, 0, 0, 0, 0, 0, 0, 1;
+          0, 0, 0, 0, 0, 0, 0.01, 0,
+          0, 0, 0, 0, 0, 0, 0, 10;
 
     // Measurement noise covariance
     R_odom_ = Eigen::Matrix<double, 6, 6>::Identity();
@@ -27,10 +27,10 @@ SaganKalmanFilter::SaganKalmanFilter()
                0, 0, 100, 0, 0, 0,
                0, 0, 0, 100, 0, 0,
                0, 0, 0, 0, 10e9, 0,
-               0, 0, 0, 0, 0, 100;
+               0, 0, 0, 0, 0, 10e9;
 
     R_imu_ = Eigen::Matrix<double, 3, 3>::Identity();
-    R_imu_ << 0.1, 0, 0,
+    R_imu_ << 1000, 0, 0,
               0, 10e9, 0,
               0, 0, 0.1;
 
@@ -54,47 +54,61 @@ SaganKalmanFilter::SaganKalmanFilter()
 
 void SaganKalmanFilter::predict(double dt)
 {
+    // Extract current state variables
     double vx = x_(2);
     double vy = x_(3);
     double ax = x_(4);
     double ay = x_(5);
     double theta = x_(6);
     double omega = x_(7);
+    double slipage_coefficient = -0.166508;
 
     // Pre-calculate sin and cos of theta
     double ct = std::cos(theta);
     double st = std::sin(theta);
     double dt2 = dt * dt;
 
-    // State transition matrix F
+    // --- UPDATED JACOBIAN (F) MATRIX CALCULATION ---
     Eigen::Matrix<double, 8, 8> F = Eigen::Matrix<double, 8, 8>::Identity();
-    F(0, 2) = cos(theta) * dt;
-    F(0, 3) = -sin(theta) * dt;
+    
+    // Row 0 (x_next) - Unchanged
+    F(0, 2) = ct * dt;
+    F(0, 3) = -st * dt;
     F(0, 4) = 0.5 * ct * dt2;
     F(0, 5) = -0.5 * st * dt2;
     F(0, 6) = (-vx * st - vy * ct) * dt + 0.5 * (-ax * st - ay * ct) * dt2;
+    
+    // Row 1 (y_next) - Unchanged
     F(1, 2) = st * dt;
     F(1, 3) = ct * dt;
     F(1, 4) = 0.5 * st * dt2;
     F(1, 5) = 0.5 * ct * dt2;
     F(1, 6) = (vx * ct - vy * st) * dt + 0.5 * (ax * ct - ay * st) * dt2;
+
+    // Row 2 (vx_next) - Unchanged
     F(2, 4) = dt;
-    F(3, 5) = dt;
+
+    // Row 3 (vy_next) - THIS IS THE CORRECTED ROW
+    F(3, 3) = 0.0; // Partial derivative of vy_next w.r.t vy is now 0
+    F(3, 5) = 0.0; // Partial derivative of vy_next w.r.t ay is now 0
+    F(3, 7) = slipage_coefficient; // Partial derivative of vy_next w.r.t omega
+
+    // Row 6 (theta_next) - Unchanged
     F(6, 7) = dt;
 
-    // Predict state
+    // --- Predict state using your new motion model ---
     Eigen::Matrix<double, 8, 1> x_pred = x_;
-    x_pred(0) = x_(0) + (vx*cos(theta) - vy*sin(theta))*dt + 0.5*(ax*cos(theta) - ay*sin(theta))*dt2;
-    x_pred(1) = x_(1) + (vx*sin(theta) + vy*cos(theta))*dt + 0.5*(ax*sin(theta) + ay*cos(theta))*dt2;
+    x_pred(0) = x_(0) + (vx*ct - vy*st)*dt + 0.5*(ax*ct - ay*st)*dt2;
+    x_pred(1) = x_(1) + (vx*st + vy*ct)*dt + 0.5*(ax*st + ay*ct)*dt2;
     x_pred(2) = vx + ax * dt;
-    x_pred(3) = vy + ay * dt;
+    x_pred(3) = slipage_coefficient * omega; // Your new model for vy
     x_pred(4) = ax;
     x_pred(5) = ay;
     x_pred(6) = theta + omega * dt;
     x_pred(7) = omega;
     x_ = x_pred;
     
-    // Predict covariance
+    // Predict covariance using the updated Jacobian
     P_ = F * P_ * F.transpose() + Q_;
 }
 
@@ -172,7 +186,7 @@ void SaganKalmanFilter::odom_callback(const nav_msgs::msg::Odometry::SharedPtr m
 void SaganKalmanFilter::imu_callback(const sensor_msgs::msg::Imu::SharedPtr msg)
 {
     double ax = -msg->linear_acceleration.x;
-    double ay = -msg->linear_acceleration.y;
+    double ay = msg->linear_acceleration.y;
     double omega_imu = msg->angular_velocity.z;
 
     Eigen::Matrix<double, 3, 1> z_imu;
