@@ -20,7 +20,7 @@ SaganOdometryNode::SaganOdometryNode()
         delta_[i] = 0.0;
     }
 
-    this->declare_parameter<double>("wheel_velocity_noise_scaler", 0.02);
+    this->declare_parameter<double>("wheel_velocity_noise_scaler", 0.04);
     this->get_parameter("wheel_velocity_noise_scaler", wheel_velocity_noise_scaler_);
 
     subscription_ = this->create_subscription<sagan_interfaces::msg::SaganStates>(
@@ -32,7 +32,7 @@ SaganOdometryNode::SaganOdometryNode()
 
     tf_broadcaster_ = std::make_shared<tf2_ros::TransformBroadcaster>(this);
 
-    timer_ = this->create_wall_timer(10ms, std::bind(&SaganOdometryNode::timer_callback, this));
+    timer_ = this->create_wall_timer(1ms, std::bind(&SaganOdometryNode::timer_callback, this));
 
     last_time_ = this->now();
 }

@@ -59,7 +59,7 @@ ros2 topic pub --once -r 10 /SaganCommands sagan_interfaces/msg/SaganCmd '{
 echo "Waiting for 5 seconds..."
 sleep 20
 
-ros2 topic pub --once /SaganCommands sagan_interfaces/msg/SaganCmd '{
+ros2 topic pub --once -r 10 /SaganCommands sagan_interfaces/msg/SaganCmd '{
   wheel_cmd: [
     {angular_velocity: 0},
     {angular_velocity: 0},

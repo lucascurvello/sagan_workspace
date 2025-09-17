@@ -47,7 +47,7 @@ def generate_launch_description():
         package='controller_manager',
         executable='spawner',
         arguments=['joint_state_broadcaster', ],
-        parameters=[{"use_sim_time": True}]
+        parameters=[{"use_sim_time": True, 'rate' : 1000}]
     )
     
     nodeRobotStatePublisher = Node(
@@ -61,7 +61,7 @@ def generate_launch_description():
         package="joint_state_publisher",
         executable="joint_state_publisher",
         output="screen",
-        parameters=[{"robot_description": robotDescription, "use_sim_time": True, 'rate': 100}]
+        parameters=[{"robot_description": robotDescription, "use_sim_time": True, 'rate': 1000}]
     )
 
     nodeSaganOdometry = Node(

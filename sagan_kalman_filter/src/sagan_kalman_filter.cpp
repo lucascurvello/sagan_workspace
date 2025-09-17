@@ -17,21 +17,21 @@ SaganKalmanFilter::SaganKalmanFilter()
           0, 0, 0, 0.1, 0, 0, 0, 0,
           0, 0, 0, 0, 1, 0, 0, 0,
           0, 0, 0, 0, 0, 1, 0, 0,
-          0, 0, 0, 0, 0, 0, 0.01, 0,
-          0, 0, 0, 0, 0, 0, 0, 10;
+          0, 0, 0, 0, 0, 0, 1, 0,
+          0, 0, 0, 0, 0, 0, 0, 10e2;
 
     // Measurement noise covariance
     R_odom_ = Eigen::Matrix<double, 6, 6>::Identity();
-    R_odom_ << 10e9, 0, 0, 0, 0, 0,
-               0, 10e9, 0, 0, 0, 0,
+    R_odom_ << 10e5, 0, 0, 0, 0, 0,
+               0, 10e5, 0, 0, 0, 0,
                0, 0, 100, 0, 0, 0,
                0, 0, 0, 100, 0, 0,
                0, 0, 0, 0, 10e9, 0,
                0, 0, 0, 0, 0, 10e9;
 
     R_imu_ = Eigen::Matrix<double, 3, 3>::Identity();
-    R_imu_ << 1000, 0, 0,
-              0, 10e9, 0,
+    R_imu_ << 10e8, 0, 0,
+              0, 10e8, 0,
               0, 0, 0.1;
 
     last_time_ = this->get_clock()->now();
