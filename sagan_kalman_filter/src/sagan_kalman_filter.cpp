@@ -1,56 +1,46 @@
 #include "sagan_kalman_filter/sagan_kalman_filter.hpp"
 #include <memory>
+#include <vector>
 #include <geometry_msgs/msg/transform_stamped.hpp>
 
 SaganKalmanFilter::SaganKalmanFilter()
-: Node("sagan_kalman_filter")
+: Node("sagan_kalman_filter_parameterized")
 {
+    // Declare parameters for the diagonal of the Q (process noise) matrix
+    auto q_diag = this->declare_parameter<std::vector<double>>(
+        "q_diag", {0.01, 0.01, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1});
+    
     // Initialize state and covariance
     x_ = Eigen::Matrix<double, 8, 1>::Zero();
     P_ = Eigen::Matrix<double, 8, 8>::Identity() * 1000.0;
 
-    // Process noise covariance
-    Q_ = Eigen::Matrix<double, 8, 8>::Identity();
-    Q_ << 0.1, 0, 0, 0, 0, 0, 0, 0,
-          0, 0.1, 0, 0, 0, 0, 0, 0,
-          0, 0, 0.1, 0, 0, 0, 0, 0,
-          0, 0, 0, 0.1, 0, 0, 0, 0,
-          0, 0, 0, 0, 1, 0, 0, 0,
-          0, 0, 0, 0, 0, 1, 0, 0,
-          0, 0, 0, 0, 0, 0, 1, 0,
-          0, 0, 0, 0, 0, 0, 0, 10e2;
+    // Initialize Q from parameters
+    Q_ = Eigen::Matrix<double, 8, 8>::Zero();
+    for(size_t i = 0; i < q_diag.size() && i < 8; ++i) { Q_(i, i) = q_diag[i]; }
 
-    // Measurement noise covariance
+    // Use fixed R matrices for this example, but they could also be parameterized
     R_odom_ = Eigen::Matrix<double, 6, 6>::Identity();
-    R_odom_ << 10e5, 0, 0, 0, 0, 0,
-               0, 10e5, 0, 0, 0, 0,
-               0, 0, 100, 0, 0, 0,
-               0, 0, 0, 100, 0, 0,
-               0, 0, 0, 0, 10e9, 0,
-               0, 0, 0, 0, 0, 10e9;
+    R_odom_ << 0.1, 0, 0, 0, 0, 0, 0, 0.1, 0, 0, 0, 0, 0, 0, 0.1, 0, 0, 0,
+               0, 0, 0, 0.1, 0, 0, 0, 0, 0, 0, 0.1, 0, 0, 0, 0, 0, 0, 1.0;
 
     R_imu_ = Eigen::Matrix<double, 3, 3>::Identity();
-    R_imu_ << 10e8, 0, 0,
-              0, 10e8, 0,
-              0, 0, 0.1;
+    R_imu_ << 0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1;
 
     last_time_ = this->get_clock()->now();
 
-    // Subscribers
+    // Subscribe to the noisy odometry for realistic filtering
     odom_sub_ = this->create_subscription<nav_msgs::msg::Odometry>(
         "/odom/with_noise", 10, std::bind(&SaganKalmanFilter::odom_callback, this, std::placeholders::_1));
     
     imu_sub_ = this->create_subscription<sensor_msgs::msg::Imu>(
         "/imu", 10, std::bind(&SaganKalmanFilter::imu_callback, this, std::placeholders::_1));
 
-    // Publisher
     fused_odom_pub_ = this->create_publisher<nav_msgs::msg::Odometry>("/odom/filtered", 10);
-
-    // Initialize transform broadcaster
     tf_broadcaster_ = std::make_shared<tf2_ros::TransformBroadcaster>(this);
 
-    RCLCPP_INFO(this->get_logger(), "Kalman Filter Node has been started.");
+    RCLCPP_INFO(this->get_logger(), "Parameterized Kalman Filter Node has been started.");
 }
+
 
 void SaganKalmanFilter::predict(double dt)
 {
