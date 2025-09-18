@@ -39,8 +39,6 @@
         <mu1>10.0</mu1>
         <mu2>1.0</mu2>
         <fdir1>1 0 0</fdir1> 
-        <soft_cfm>0.1</soft_cfm>
-        <soft_erp>0.2</soft_erp>
         <kp>1e15</kp>
         <kd>4e12</kd>
         <minDepth>0.001</minDepth>
@@ -52,8 +50,6 @@
         <mu1>10.0</mu1>
         <mu2>1.0</mu2>
         <fdir1>1 0 0</fdir1>
-        <soft_cfm>0.1</soft_cfm>
-        <soft_erp>0.2</soft_erp>
         <kp>1e15</kp>
         <kd>4e12</kd>
         <minDepth>0.001</minDepth>
@@ -65,8 +61,6 @@
         <mu1>10.0</mu1>
         <mu2>1.0</mu2>
         <fdir1>1 0 0</fdir1>
-        <soft_cfm>0.1</soft_cfm>
-        <soft_erp>0.2</soft_erp>
         <kp>1e15</kp>
         <kd>4e12</kd>
         <minDepth>0.001</minDepth>
@@ -78,8 +72,6 @@
         <mu1>10.0</mu1>
         <mu2>1.0</mu2>
         <fdir1>1 0 0</fdir1>
-        <soft_cfm>0.1</soft_cfm>
-        <soft_erp>0.2</soft_erp>
         <kp>1e15</kp>
         <kd>4e12</kd>
         <minDepth>0.001</minDepth>
@@ -93,7 +85,7 @@
             <update_rate>1000</update_rate>
             <visualize>true</visualize>
             <topic>imu</topic>
-            <noise>
+        <noise>
             <type>gaussian</type>
             
             <!-- Noise parameters for angular velocity (rate) -->

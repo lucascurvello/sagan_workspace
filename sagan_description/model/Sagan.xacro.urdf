@@ -126,12 +126,12 @@
       <mass
         value="${m_arm}" />
       <inertia
-        ixx="0.0"
-        ixy="0.0"
-        ixz="0.0"
-        iyy="0.0"
-        iyz="0.0"
-        izz="0.0" />
+        ixx="0.0000000001"
+        ixy="0.0000000001"
+        ixz="0.0000000001"
+        iyy="0.0000000001"
+        iyz="0.0000000001"
+        izz="0.0000000001" />
     </inertial>
     <visual>
       <origin
@@ -179,7 +179,7 @@
         ixz="0.0"
         iyy="0.0"
         iyz="0.0"
-        izz="0.0" />
+        izz="0.0"/>
     </inertial>
     <visual>
       <origin
@@ -260,12 +260,12 @@
       <mass
         value="${m_steering_arm}" />
       <inertia
-        ixx="0.0"
-        ixy="0.0"
-        ixz="0.0"
-        iyy="0.0"
-        iyz="0.0"
-        izz="0.0" />
+        ixx="0.0000000001"
+        ixy="0.0000000001"
+        ixz="0.0000000001"
+        iyy="0.0000000001"
+        iyz="0.0000000001"
+        izz="0.0000000001" />
     </inertial>
     <visual>
       <origin
@@ -346,12 +346,12 @@
       <mass
         value="${m_arm}" />
       <inertia
-        ixx="0.0"
-        ixy="0.0"
-        ixz="0.0"
-        iyy="0.0"
-        iyz="0.0"
-        izz="0.0" />
+        ixx="0.0000000001"
+        ixy="0.0000000001"
+        ixz="0.0000000001"
+        iyy="0.0000000001"
+        iyz="0.0000000001"
+        izz="0.0000000001" />
     </inertial>
     <visual>
       <origin
@@ -394,12 +394,12 @@
       <mass
         value="${m_steering_arm}"/>
       <inertia
-        ixx="0.0"
-        ixy="0.0"
-        ixz="0.0"
-        iyy="0.0"
-        iyz="0.0"
-        izz="0.0" />
+        ixx="0.0000000001"
+        ixy="0.0000000001"
+        ixz="0.0000000001"
+        iyy="0.0000000001"
+        iyz="0.0000000001"
+        izz="0.0000000001" />
     </inertial>
     <visual>
       <origin
@@ -480,12 +480,12 @@
       <mass
         value="${m_steering_arm}" />
       <inertia
-        ixx="0.0"
-        ixy="0.0"
-        ixz="0.0"
-        iyy="0.0"
-        iyz="0.0"
-        izz="0.0" />
+        ixx="0.0000000001"
+        ixy="0.0000000001"
+        ixz="0.0000000001"
+        iyy="0.0000000001"
+        iyz="0.0000000001"
+        izz="0.0000000001" />
     </inertial>
     <visual>
       <origin
@@ -569,12 +569,12 @@
       <mass
         value="0" />
       <inertia
-        ixx="0"
-        ixy="0"
-        ixz="0"
-        iyy="0"
-        iyz="0"
-        izz="0" />
+        ixx="0.0000000001"
+        ixy="0.0000000001"
+        ixz="0.0000000001"
+        iyy="0.0000000001"
+        iyz="0.0000000001"
+        izz="0.0000000001" />
     </inertial>
   </link>
   <joint
@@ -600,12 +600,12 @@
       <mass
         value="0" />
       <inertia
-        ixx="0"
-        ixy="0"
-        ixz="0"
-        iyy="0"
-        iyz="0"
-        izz="0" />
+        ixx="0.0000000001"
+        ixy="0.0000000001"
+        ixz="0.0000000001"
+        iyy="0.0000000001"
+        iyz="0.0000000001"
+        izz="0.0000000001" />
     </inertial>
   </link>
   <joint

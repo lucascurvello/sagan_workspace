@@ -1,46 +1,62 @@
 #include "sagan_kalman_filter/sagan_kalman_filter.hpp"
 #include <memory>
-#include <vector>
 #include <geometry_msgs/msg/transform_stamped.hpp>
 
 SaganKalmanFilter::SaganKalmanFilter()
-: Node("sagan_kalman_filter_parameterized")
+: Node("sagan_kalman_filter")
 {
-    // Declare parameters for the diagonal of the Q (process noise) matrix
-    auto q_diag = this->declare_parameter<std::vector<double>>(
-        "q_diag", {0.01, 0.01, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1});
+    // Declare parameters for the diagonal elements of the covariance matrices
+    this->declare_parameter<std::vector<double>>("Q_diag", 
+        {0.1, 0.1, 0.1, 0.1, 1.0, 1.0, 1.0, 1000.0});
     
-    // Initialize state and covariance
+    this->declare_parameter<std::vector<double>>("R_odom_diag", 
+        {10e9, 10e9, 100.0, 100.0, 10e9, 10e9});
+
+    this->declare_parameter<std::vector<double>>("R_imu_diag", 
+        {10e8, 10e8, 0.1});
+
+    // Get the parameter values
+    std::vector<double> q_diag = this->get_parameter("Q_diag").as_double_array();
+    std::vector<double> r_odom_diag = this->get_parameter("R_odom_diag").as_double_array();
+    std::vector<double> r_imu_diag = this->get_parameter("R_imu_diag").as_double_array();
+    
+    // --- Initialize state and covariance ---
     x_ = Eigen::Matrix<double, 8, 1>::Zero();
     P_ = Eigen::Matrix<double, 8, 8>::Identity() * 1000.0;
 
-    // Initialize Q from parameters
+    // --- Process noise covariance (Q) ---
+    // Validate size and construct the matrix from the parameter
+    if (q_diag.size() != 8) {
+        RCLCPP_ERROR(this->get_logger(), "Q_diag parameter must have 8 elements. Using defaults.");
+        q_diag = {0.1, 0.1, 0.1, 0.1, 1.0, 1.0, 1.0, 1000.0};
+    }
     Q_ = Eigen::Matrix<double, 8, 8>::Zero();
-    for(size_t i = 0; i < q_diag.size() && i < 8; ++i) { Q_(i, i) = q_diag[i]; }
+    for(int i = 0; i < 8; ++i) {
+        Q_(i, i) = q_diag[i];
+    }
 
-    // Use fixed R matrices for this example, but they could also be parameterized
-    R_odom_ = Eigen::Matrix<double, 6, 6>::Identity();
-    R_odom_ << 0.1, 0, 0, 0, 0, 0, 0, 0.1, 0, 0, 0, 0, 0, 0, 0.1, 0, 0, 0,
-               0, 0, 0, 0.1, 0, 0, 0, 0, 0, 0, 0.1, 0, 0, 0, 0, 0, 0, 1.0;
+    // --- Odometry measurement noise covariance (R_odom) ---
+    if (r_odom_diag.size() != 6) {
+        RCLCPP_ERROR(this->get_logger(), "R_odom_diag parameter must have 6 elements. Using defaults.");
+        r_odom_diag = {10e9, 10e9, 100.0, 100.0, 10e9, 10e9};
+    }
+    R_odom_ = Eigen::Matrix<double, 6, 6>::Zero();
+    for(int i = 0; i < 6; ++i) {
+        R_odom_(i, i) = r_odom_diag[i];
+    }
 
-    R_imu_ = Eigen::Matrix<double, 3, 3>::Identity();
-    R_imu_ << 0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1;
+    // --- IMU measurement noise covariance (R_imu) ---
+    if (r_imu_diag.size() != 3) {
+        RCLCPP_ERROR(this->get_logger(), "R_imu_diag parameter must have 3 elements. Using defaults.");
+        r_imu_diag = {10e8, 10e8, 0.1};
+    }
+    R_imu_ = Eigen::Matrix<double, 3, 3>::Zero();
+    for(int i = 0; i < 3; ++i) {
+        R_imu_(i, i) = r_imu_diag[i];
+    }
 
-    last_time_ = this->get_clock()->now();
-
-    // Subscribe to the noisy odometry for realistic filtering
-    odom_sub_ = this->create_subscription<nav_msgs::msg::Odometry>(
-        "/odom/with_noise", 10, std::bind(&SaganKalmanFilter::odom_callback, this, std::placeholders::_1));
-    
-    imu_sub_ = this->create_subscription<sensor_msgs::msg::Imu>(
-        "/imu", 10, std::bind(&SaganKalmanFilter::imu_callback, this, std::placeholders::_1));
-
-    fused_odom_pub_ = this->create_publisher<nav_msgs::msg::Odometry>("/odom/filtered", 10);
-    tf_broadcaster_ = std::make_shared<tf2_ros::TransformBroadcaster>(this);
-
-    RCLCPP_INFO(this->get_logger(), "Parameterized Kalman Filter Node has been started.");
+    RCLCPP_INFO(this->get_logger(), "Kalman Filter Node has been started.");
 }
-
 
 void SaganKalmanFilter::predict(double dt)
 {

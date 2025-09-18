@@ -1,11 +1,10 @@
 import os
 from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
-from launch.actions import IncludeLaunchDescription, DeclareLaunchArgument
+from launch.actions import IncludeLaunchDescription
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch_ros.actions import Node
 import xacro
-from launch.substitutions import LaunchConfiguration
 
 def generate_launch_description():
     
@@ -23,8 +22,6 @@ def generate_launch_description():
 
     gazeboLaunch = IncludeLaunchDescription(gazebo_rosPackageLaunch, launch_arguments={"gz_args": [" -r -v -v4 " + os.path.join(get_package_share_directory("sagan_description"), "worlds/empty_world.sdf")], "on_exit_shutdown": "true"}.items())
     
-    q_diag_args = [DeclareLaunchArgument(f'q_diag_{i}', default_value='0.1') for i in range(8)]
-
     spawnModelNodeGazebo = Node(
         package="ros_gz_sim",
         executable="create",
@@ -82,17 +79,11 @@ def generate_launch_description():
         parameters=[os.path.join(get_package_share_directory("sagan_description"), "parameters/sagan_ekf.yaml"), {"use_sim_time": True}],
     )
 
-    q_diag_values = [LaunchConfiguration(f'q_diag_{i}') for i in range(8)]
-
-    sagan_kalman_filter_node = Node(
-        package='sagan_kalman_filter_parameterized',
-        executable='sagan_kalman_filter_node',
-        name='sagan_kalman_filter_node',
+    nodeSaganKF = Node(
+        package='sagan_kalman_filter',
+        executable='sagan_kalman_filter',
         output='screen',
-        parameters=[{
-            'use_sim_time': True,
-            'q_diag': q_diag_values,
-        }]
+        parameters=[{"use_sim_time": True}],
     )
 
 
@@ -124,7 +115,7 @@ def generate_launch_description():
     launchDescriptionObject.add_action(diff_drive_base_controller_spawner)
     launchDescriptionObject.add_action(nodeSaganOdometry)
     #launchDescriptionObject.add_action(nodeSaganEfk)
-    launchDescriptionObject.add_action(sagan_kalman_filter_node)
+    launchDescriptionObject.add_action(nodeSaganKF)
     #launchDescriptionObject.add_action(nodeJointStatePublisher)
     return launchDescriptionObject
     

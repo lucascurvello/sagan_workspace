@@ -2,19 +2,25 @@
 <?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
 <package format="3">
   <name>sagan_kalman_filter</name>
-  <version>0.0.0</version>
-  <description>A parameterized version of the Sagan Kalman Filter for tuning.</description>
-  <maintainer email="user@todo.todo">user</maintainer>
-  <license>Apache-2.0</license>
+  <version>0.1.0</version>
+  <description>A simple C++ ROS 2 node to fuse IMU and odometry for a differential drive robot using a Kalman filter.</description>
+  <maintainer email="user@example.com">Your Name</maintainer>
+  <license>Apache License 2.0</license>
 
   <buildtool_depend>ament_cmake</buildtool_depend>
+
   <depend>rclcpp</depend>
   <depend>nav_msgs</depend>
   <depend>sensor_msgs</depend>
   <depend>geometry_msgs</depend>
+  <depend>tf2</depend>
   <depend>tf2_ros</depend>
   <depend>tf2_geometry_msgs</depend>
-  <depend>eigen</depend>
+
+  <build_depend>eigen</build_depend>
+
+  <test_depend>ament_lint_auto</test_depend>
+  <test_depend>ament_lint_common</test_depend>
 
   <export>
     <build_type>ament_cmake</build_type>
