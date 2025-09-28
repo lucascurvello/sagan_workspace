@@ -55,6 +55,25 @@ SaganKalmanFilter::SaganKalmanFilter()
         R_imu_(i, i) = r_imu_diag[i];
     }
 
+    last_time_ = this->get_clock()->now();
+
+    // Subscribers
+    odom_sub_ = this->create_subscription<nav_msgs::msg::Odometry>(
+        "/odom/with_noise", 10, std::bind(&SaganKalmanFilter::odom_callback, this, std::placeholders::_1));
+    
+    imu_sub_ = this->create_subscription<sensor_msgs::msg::Imu>(
+        "/imu", 10, std::bind(&SaganKalmanFilter::imu_callback, this, std::placeholders::_1));
+
+    // Publisher
+    fused_odom_pub_ = this->create_publisher<nav_msgs::msg::Odometry>("/odom/filtered", 10);
+
+    // Initialize transform broadcaster
+    tf_broadcaster_ = std::make_shared<tf2_ros::TransformBroadcaster>(this);
+
+    reset_service_ = this->create_service<std_srvs::srv::Trigger>(
+        "reset_ekf",
+        std::bind(&SaganKalmanFilter::reset_callback, this, std::placeholders::_1, std::placeholders::_2));
+
     RCLCPP_INFO(this->get_logger(), "Kalman Filter Node has been started.");
 }
 
@@ -283,6 +302,24 @@ void SaganKalmanFilter::publish_fused_odometry()
     transform_stamped.transform.rotation = tf2::toMsg(q);
     
     tf_broadcaster_->sendTransform(transform_stamped);
+}
+
+void SaganKalmanFilter::reset_callback(const std::shared_ptr<std_srvs::srv::Trigger::Request> request,
+                        std::shared_ptr<std_srvs::srv::Trigger::Response> response)
+{
+    // The request is empty, so we don't use it.
+    (void)request;
+
+    // --- THIS IS YOUR RESET LOGIC ---
+    RCLCPP_INFO(this->get_logger(), "Reset kalman filter command received!");
+    x_ = Eigen::Matrix<double, 8, 1>::Zero();
+    P_ = Eigen::Matrix<double, 8, 8>::Identity() * 1000.0;
+    RCLCPP_INFO(this->get_logger(), "Kalman Filter RESETED");
+    // --------------------------------
+
+    // The response indicates if the command was successful
+    response->success = true;
+    response->message = "Kalman Filter successfully reset.";
 }
 
 

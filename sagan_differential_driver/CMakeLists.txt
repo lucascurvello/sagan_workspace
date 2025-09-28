@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.8)
-project(sagan_cpp_topic)
+project(sagan_differential_driver)
 
 if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
   add_compile_options(-Wall -Wextra -Wpedantic)
@@ -10,20 +10,22 @@ find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(std_msgs REQUIRED)
 find_package(sagan_interfaces REQUIRED)
+find_package(geometry_msgs REQUIRED)
 
 include_directories(
   ${CMAKE_CURRENT_SOURCE_DIR}/include
 )
 
-add_executable(sagan_cpp_topic  src/sagan_cpp_topic.cpp)
+add_executable(sagan_differential_driver  src/sagan_differential_driver.cpp)
 
-ament_target_dependencies(sagan_cpp_topic
-rclcpp
-std_msgs
-sagan_interfaces
+ament_target_dependencies(sagan_differential_driver
+  rclcpp
+  std_msgs
+  geometry_msgs
+  sagan_interfaces
 )
 
-install(TARGETS sagan_cpp_topic
+install(TARGETS sagan_differential_driver
   DESTINATION lib/${PROJECT_NAME}
 )
 

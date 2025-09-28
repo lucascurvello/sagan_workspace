@@ -3,6 +3,7 @@
 
 #include <rclcpp/rclcpp.hpp>
 #include <sagan_interfaces/msg/sagan_states.hpp>
+#include "std_srvs/srv/trigger.hpp" 
 #include <nav_msgs/msg/odometry.hpp>
 #include <tf2_ros/transform_broadcaster.h>
 #include <random>
@@ -34,12 +35,16 @@ private:
      */
     void timer_callback();
 
+    void reset_callback(const std::shared_ptr<std_srvs::srv::Trigger::Request> request,
+                        std::shared_ptr<std_srvs::srv::Trigger::Response> response);
+
     // --- ROS 2 Member Variables ---
     rclcpp::Subscription<sagan_interfaces::msg::SaganStates>::SharedPtr subscription_;
     rclcpp::Publisher<nav_msgs::msg::Odometry>::SharedPtr odom_publisher_;
     rclcpp::Publisher<nav_msgs::msg::Odometry>::SharedPtr odom_with_noise_publisher_;
     rclcpp::TimerBase::SharedPtr timer_;
     std::shared_ptr<tf2_ros::TransformBroadcaster> tf_broadcaster_;
+    rclcpp::Service<std_srvs::srv::Trigger>::SharedPtr reset_service_;
 
     // --- Robot State and Pose Variables ---
     // Clean (ground-truth) pose

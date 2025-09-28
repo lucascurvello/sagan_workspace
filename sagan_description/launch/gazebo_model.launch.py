@@ -71,21 +71,12 @@ def generate_launch_description():
         parameters=[{"use_sim_time": True}]
     )
 
-    nodeSaganEfk = Node(
-        package='robot_localization',
-        executable='ekf_node',
-        name='ekf_filter_node',
-        output='screen',
-        parameters=[os.path.join(get_package_share_directory("sagan_description"), "parameters/sagan_ekf.yaml"), {"use_sim_time": True}],
-    )
-
-    nodeSaganKF = Node(
+    nodeSaganEKF = Node(
         package='sagan_kalman_filter',
         executable='sagan_kalman_filter',
         output='screen',
         parameters=[{"use_sim_time": True}],
     )
-
 
     bridge_params = os.path.join(
     get_package_share_directory(namePackage),
@@ -97,6 +88,7 @@ def generate_launch_description():
         package="ros_gz_bridge",
         executable="parameter_bridge",
         arguments=[
+            "/world/default/set_pose@ros_gz_interfaces/srv/SetEntityPose", #bridge for a gazebo service, i cant manage to put in the yaml
             "--ros-args",
             "-p",
             f"config_file:={bridge_params}",
@@ -114,8 +106,7 @@ def generate_launch_description():
     launchDescriptionObject.add_action(joint_state_broadcaster_spawner)
     launchDescriptionObject.add_action(diff_drive_base_controller_spawner)
     launchDescriptionObject.add_action(nodeSaganOdometry)
-    #launchDescriptionObject.add_action(nodeSaganEfk)
-    launchDescriptionObject.add_action(nodeSaganKF)
+    launchDescriptionObject.add_action(nodeSaganEKF)
     #launchDescriptionObject.add_action(nodeJointStatePublisher)
     return launchDescriptionObject
     

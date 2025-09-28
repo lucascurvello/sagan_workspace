@@ -34,6 +34,10 @@ SaganOdometryNode::SaganOdometryNode()
 
     timer_ = this->create_wall_timer(1ms, std::bind(&SaganOdometryNode::timer_callback, this));
 
+    reset_service_ = this->create_service<std_srvs::srv::Trigger>(
+        "reset_odometry",
+        std::bind(&SaganOdometryNode::reset_callback, this, std::placeholders::_1, std::placeholders::_2));
+
     last_time_ = this->now();
 }
 
@@ -141,6 +145,28 @@ void SaganOdometryNode::timer_callback()
         transform_stamped.transform.rotation = tf2::toMsg(q_noisy);
         tf_broadcaster_->sendTransform(transform_stamped);
     }
+}
+
+void SaganOdometryNode::reset_callback(const std::shared_ptr<std_srvs::srv::Trigger::Request> request,
+                        std::shared_ptr<std_srvs::srv::Trigger::Response> response)
+{
+    // The request is empty, so we don't use it.
+    (void)request;
+
+    // --- THIS IS YOUR RESET LOGIC ---
+    RCLCPP_INFO(this->get_logger(), "Reset odometry command received!");
+    x_= 0;
+    y_ = 0;
+    theta_ = 0;
+    noisy_x_ = 0;
+    noisy_y_ = 0;
+    noisy_theta_ = 0;
+    RCLCPP_INFO(this->get_logger(), "Odometry RESETED");
+    // --------------------------------
+
+    // The response indicates if the command was successful
+    response->success = true;
+    response->message = "Odometry successfully reset.";
 }
 
 // --- MAIN FUNCTION ---

@@ -44,3 +44,8 @@
   gz_type_name: "gz.msgs.IMU"
   direction: GZ_TO_ROS
 
+- gz_topic_name: "/world/default/set_pose"
+  ros_type_name: "ros_gz_interfaces/srv/SetEntityPose"
+
+
+
