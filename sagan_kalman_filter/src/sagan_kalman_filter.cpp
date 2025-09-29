@@ -7,13 +7,13 @@ SaganKalmanFilter::SaganKalmanFilter()
 {
     // Declare parameters for the diagonal elements of the covariance matrices
     this->declare_parameter<std::vector<double>>("Q_diag", 
-        {0.1, 0.1, 0.1, 0.1, 1.0, 1.0, 1.0, 1000.0});
+        {462279.6023, 5609088.121, 4896166.7266, 1193402.2046, 8497796.9343, 2735059.1914, 763005.694, 378946.8142});
     
     this->declare_parameter<std::vector<double>>("R_odom_diag", 
-        {10e9, 10e9, 100.0, 100.0, 10e9, 10e9});
+        {1367527.5342, 3405549.9843, 6696334.2782, 8248155.1103, 2744745.544, 659579.593});
 
     this->declare_parameter<std::vector<double>>("R_imu_diag", 
-        {10e8, 10e8, 0.1});
+        {3086058.1707, 6634384.6675, 2510449.9398});
 
     // Get the parameter values
     std::vector<double> q_diag = this->get_parameter("Q_diag").as_double_array();

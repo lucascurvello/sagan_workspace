@@ -78,6 +78,13 @@ def generate_launch_description():
         parameters=[{"use_sim_time": True}],
     )
 
+    nodeSaganDiffDriver = Node(
+        package='sagan_differential_driver',
+        executable='sagan_differential_driver',
+        output='screen',
+        parameters=[{"use_sim_time": True}],
+    )
+
     bridge_params = os.path.join(
     get_package_share_directory(namePackage),
     "parameters",
@@ -107,6 +114,7 @@ def generate_launch_description():
     launchDescriptionObject.add_action(diff_drive_base_controller_spawner)
     launchDescriptionObject.add_action(nodeSaganOdometry)
     launchDescriptionObject.add_action(nodeSaganEKF)
+    launchDescriptionObject.add_action(nodeSaganDiffDriver)
     #launchDescriptionObject.add_action(nodeJointStatePublisher)
     return launchDescriptionObject
     
