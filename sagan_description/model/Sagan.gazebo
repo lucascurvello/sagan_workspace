@@ -85,25 +85,57 @@
             <update_rate>1000</update_rate>
             <visualize>true</visualize>
             <topic>imu</topic>
-        <noise>
-            <type>gaussian</type>
-            
-            <!-- Noise parameters for angular velocity (rate) -->
-            <rate>
-                <mean>0.0</mean>
-                <stddev>2e-4</stddev>
-                <bias_mean>0.0000075</bias_mean>
-                <bias_stddev>0.0000008</bias_stddev>
-            </rate>
-            
-            <!-- Noise parameters for linear acceleration -->
-            <accel>
-                <mean>0.0</mean>
-                <stddev>1.7e-2</stddev>
-                <bias_mean>0.1</bias_mean>
-                <bias_stddev>0.001</bias_stddev>
-            </accel>
-        </noise>
+            <imu>
+                 <angular_velocity>
+                    <x>
+                        <noise type = "gaussian">
+                            <mean>0.0</mean>
+                            <stddev>1.745e-4</stddev>
+                            <bias_mean>0.0</bias_mean>
+                            <bias_stddev>1.45e-6</bias_stddev>
+                        </noise>
+                    </x>
+                    <y>
+                        <noise type = "gaussian">
+                            <mean>0.0</mean>
+                            <stddev>1.745e-4</stddev>
+                            <bias_mean>0.0</bias_mean>
+                            <bias_stddev>1.45e-6</bias_stddev>
+                        </noise>
+                    </y>
+                    <z>
+                        <noise type = "gaussian">
+                            <mean>0.0</mean>
+                            <stddev>1.745e-4</stddev>
+                            <bias_mean>0.0</bias_mean>
+                            <bias_stddev>1.45e-6</bias_stddev>
+                        </noise>
+                    </z>
+                </angular_velocity>
+                <linear_acceleration>
+                    <x>
+                        <noise type = "gaussian">
+                            <mean>0.0</mean>
+                            <stddev>0.00294</stddev>
+                            <bias_stddev>0.000196</bias_stddev>
+                        </noise>
+                    </x>
+                    <y>
+                        <noise type = "gaussian">
+                            <mean>0.0</mean>
+                            <stddev>0.00294</stddev>
+                            <bias_stddev>0.000196</bias_stddev>
+                        </noise>
+                    </y>
+                    <z>
+                        <noise type = "gaussian">
+                            <mean>0.0</mean>
+                            <stddev>0.00294</stddev>
+                            <bias_stddev>0.000196</bias_stddev>
+                        </noise>
+                    </z>
+                </linear_acceleration>
+            </imu>
         </sensor>
     </gazebo>
 
@@ -111,7 +143,7 @@
         <plugin filename="gz-sim-odometry-publisher-system" name="gz::sim::systems::OdometryPublisher">
             <odom_frame>odom</odom_frame>
             <robot_base_frame>gz_reference</robot_base_frame>
-            <odom_publish_frequency>1000</odom_publish_frequency>
+            <odom_publish_frequency>200</odom_publish_frequency>
         </plugin>
     </gazebo>
    

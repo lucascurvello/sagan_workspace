@@ -1,0 +1,36 @@
+sagan_kalman_filter:
+  ros__parameters:
+    # Frame IDs and update rate
+    odom_frame_id: "odom"
+    base_frame_id: "efk_reference"
+    predict_frequency: 200.0 # Frequency in Hz for the prediction step
+
+    # Process noise covariance (Q) diagonal elements.
+    # This represents the uncertainty in our motion model.
+    # Order: [x, y, vx, vy, ax, ay, theta, omega]
+    Q_diag: [70.65, 773.7, 235.8, 727.8, 1000.0, 777.6, 390.7, 688.1]
+
+    # --- Sensor Configurations ---
+
+    # Odometry Sensor Settings
+    odom_sensor:
+      # Which state variables does this sensor measure?
+      # Order: [x,    y,    vx,   vy,   ax,   ay,   theta, omega]
+      measurement_map: [false, false, true, true, false, false, true, true]
+
+      # Measurement noise covariance (R) for the enabled states above.
+      # The number of elements MUST match the number of `true` values in the map.
+      # Order: [R_x, R_y, R_vx, R_vy, R_theta, R_omega]
+      R_diag: [707.9, 896.2, 61.88, 173.9]
+
+    # IMU Sensor Settings
+    imu_sensor:
+      # Which state variables does this sensor measure?
+      # Here, we assume the IMU measures accelerations and angular velocity.
+      # Some IMUs can also provide a fused orientation (theta/yaw).
+      # Order: [x,    y,    vx,   vy,   ax,   ay,   theta, omega]
+      measurement_map: [false, false, false, false, true, true, true, true]
+      
+      # Measurement noise covariance (R) for the enabled states above.
+      # Order: [R_ax, R_ay, R_omega]
+      R_diag: [937.8, 886.5, 192.4, 865.9]

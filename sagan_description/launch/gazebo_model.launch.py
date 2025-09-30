@@ -75,7 +75,7 @@ def generate_launch_description():
         package='sagan_kalman_filter',
         executable='sagan_kalman_filter',
         output='screen',
-        parameters=[{"use_sim_time": True}],
+        parameters=[{"use_sim_time": True}, os.path.join(get_package_share_directory('sagan_description'), 'parameters', 'ekf_params.yaml')],
     )
 
     nodeSaganDiffDriver = Node(

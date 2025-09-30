@@ -32,7 +32,7 @@ SaganOdometryNode::SaganOdometryNode()
 
     tf_broadcaster_ = std::make_shared<tf2_ros::TransformBroadcaster>(this);
 
-    timer_ = this->create_wall_timer(1ms, std::bind(&SaganOdometryNode::timer_callback, this));
+    timer_ = this->create_wall_timer(5ms, std::bind(&SaganOdometryNode::timer_callback, this));
 
     reset_service_ = this->create_service<std_srvs::srv::Trigger>(
         "reset_odometry",
