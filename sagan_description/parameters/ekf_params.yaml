@@ -8,7 +8,8 @@ sagan_kalman_filter:
     # Process noise covariance (Q) diagonal elements.
     # This represents the uncertainty in our motion model.
     # Order: [x, y, vx, vy, ax, ay, theta, omega]
-    Q_diag: [70.65, 773.7, 235.8, 727.8, 1000.0, 777.6, 390.7, 688.1]
+    #Q_diag: [106.2343, 142.2259, 39.5014, 160.9998, 608.8385, 721.4349, 173.6776, 87.9757]
+    Q_diag: [421.5301, 153.6166, 180.4761, 66.388, 150.1005, 178.578, 67.2805, 727.2038]
 
     # --- Sensor Configurations ---
 
@@ -21,8 +22,8 @@ sagan_kalman_filter:
       # Measurement noise covariance (R) for the enabled states above.
       # The number of elements MUST match the number of `true` values in the map.
       # Order: [R_x, R_y, R_vx, R_vy, R_theta, R_omega]
-      R_diag: [707.9, 896.2, 61.88, 173.9]
-
+      #R_diag: [255.1543, 374.6235, 150.3799, 243.0709]
+      R_diag: [927.1976, 315.2992, 160.7775, 111.9288]
     # IMU Sensor Settings
     imu_sensor:
       # Which state variables does this sensor measure?
@@ -33,4 +34,5 @@ sagan_kalman_filter:
       
       # Measurement noise covariance (R) for the enabled states above.
       # Order: [R_ax, R_ay, R_omega]
-      R_diag: [937.8, 886.5, 192.4, 865.9]
+      #R_diag: [498.8809, 297.382, 23.0799, 179.971]
+      R_diag: [4.3951, 175.8178, 11.3659, 1000.0]

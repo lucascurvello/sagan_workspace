@@ -2,6 +2,7 @@
 #include <memory>
 #include <geometry_msgs/msg/transform_stamped.hpp>
 #include <rclcpp/parameter.hpp>
+#include <cmath> // Required for M_PI
 
 // Helper function to configure a sensor from parameters
 void configure_sensor(
@@ -163,10 +164,20 @@ void SaganKalmanFilter::predict()
 
 void SaganKalmanFilter::update(const Eigen::VectorXd& z, const Eigen::MatrixXd& H, const Eigen::MatrixXd& R)
 {
-    int measurement_dim = H.rows();
     Eigen::MatrixXd I = Eigen::MatrixXd::Identity(STATE_SIZE, STATE_SIZE);
 
     Eigen::VectorXd y = z - H * x_; // Innovation or measurement residual
+
+    // *** ANGLE WRAPPING CORRECTION ***
+    // This is the critical fix. We check if any measurement corresponds to the
+    // angle state (theta, index 6) and normalize its innovation (error).
+    for (int i = 0; i < H.rows(); ++i) {
+        if (H(i, 6) == 1.0) { 
+            while (y(i) > M_PI) y(i) -= 2.0 * M_PI;
+            while (y(i) < -M_PI) y(i) += 2.0 * M_PI;
+        }
+    }
+
     Eigen::MatrixXd S = H * P_ * H.transpose() + R; // Innovation covariance
     Eigen::MatrixXd K = P_ * H.transpose() * S.inverse(); // Kalman gain
 
@@ -324,3 +335,4 @@ int main(int argc, char * argv[])
     rclcpp::shutdown();
     return 0;
 }
+
