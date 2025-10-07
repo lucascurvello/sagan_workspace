@@ -5,8 +5,24 @@
 <robot name="Sagan" xmlns:xacro="http://ros.org/wiki/xacro">
   
   <xacro:include filename="$(find sagan_description)/model/Sagan.gazebo"/>
+
   <xacro:include filename="$(find sagan_description)/model/ros2_control.xacro"/>
 
+
+    <xacro:macro name="cylinder_inertia" params="m r h">
+      <inertial>
+        <pose>0 0 0 ${pi/2} 0 0</pose>
+        <mass>${m}</mass>
+        <inertia>
+          <ixx>${(m/12) * (3*r*r + h*h)}</ixx>
+          <ixy>0.0</ixy>
+          <ixz>0.0</ixz>
+          <iyy>${(m/12) * (3*r*r + h*h)}</iyy>
+          <iyz>0.0</iyz>
+          <izz>${(m/2) * (r*r)}</izz>
+        </inertia>
+      </inertial>
+    </xacro:macro>
   
   <link name="odom"></link> 
    
@@ -21,12 +37,12 @@
   </joint>  
   -->
   
-  <!--<link name="base_footprint"></link>
+  <!-- <link name="base_footprint"></link>
     <joint name="base_link_joint" type="fixed">
       <parent link="base_footprint"/>
       <child link="base_link"/>
-    </joint>
-  -->
+    </joint> -->
+
 
   <link name="gz_reference"></link>
   <joint name="odom_gz_reference_joint" type="fixed">
@@ -70,9 +86,11 @@
   <xacro:property name="Iy_body" value="${(1/12)*m_base*(a*a+b*b)}"/>
   <xacro:property name="Iz_body" value="${(1/12)*m_base*(a*a+c*c)}"/>
 
-    <!-- Moments of inertia of the wheel -->
+  <!-- Moments of inertia of the wheel -->
   <xacro:property name="Iz_wheel" value="${0.5*m_wheel*r_wheel*r_wheel}"/>
   <xacro:property name="I_wheel" value="${(1/12)*m_wheel*(3.0*r_wheel*r_wheel+d_wheel*d_wheel)}"/>
+
+
 
   <link
     name="base_link">
@@ -82,21 +100,14 @@
         rpy="0 0 0" />
       <mass
         value="${m_base}" />
-      <inertia
-        ixx="${Ix_body}"
-        ixy="0.0"
-        ixz="0.0"
-        iyy="${Iy_body}"
-        iyz="0.0"
-        izz="${Iz_body}" />
+      <inertia   ixx="${Ix_body}" ixy="0.0" ixz="0.0" iyy="${Iy_body}" iyz="0.0" izz="${Iz_body}" />
     </inertial>
     <visual>
       <origin
         xyz="0 0 0"
         rpy="0 0 0" />
       <geometry>
-        <mesh
-          filename="file://$(find sagan_description)/model/meshes/base_link.STL" />
+        <mesh  filename="file://$(find sagan_description)/model/meshes/base_link.STL" /> 
       </geometry>
     </visual>
     <collision>
@@ -109,6 +120,8 @@
       </geometry>
     </collision>
   </link>
+
+
   <link
     name="Left_arm">
     <inertial>
@@ -144,6 +157,8 @@
       </geometry>
     </collision>
   </link>
+
+
   <joint
     name="Left_arm_joint"
     type="fixed">
@@ -157,6 +172,8 @@
     <axis
       xyz="0 0 0" />
   </joint>
+
+
   <link
     name="LF_stering_arm">
     <inertial>
@@ -183,6 +200,8 @@
       </geometry>
     </visual>
   </link>
+
+
   <joint
     name="LF_stering_arm_joint"
     type="continuous">
@@ -196,6 +215,8 @@
     <axis
       xyz="0 1 0" />
   </joint>
+
+
   <link
     name="LF_wheel">
     <inertial>
@@ -239,6 +260,8 @@
       </surface>
     </collision>
   </link>
+
+
   <joint
     name="LF_wheel_joint"
     type="continuous">
@@ -252,6 +275,8 @@
     <axis
       xyz="0 0 1" />
   </joint>
+
+
   <link
     name="LR_stering_arm">
     <inertial>
@@ -278,6 +303,8 @@
       </geometry>
     </visual>
   </link>
+
+
   <joint
     name="LR_stering_arm_joint"
     type="continuous">
@@ -291,6 +318,8 @@
     <axis
       xyz="0 1 0" />
   </joint>
+
+
   <link
     name="LR_wheel">
     <inertial>
@@ -334,6 +363,8 @@
       </surface> 
     </collision>
   </link>
+
+
   <joint
     name="LR_wheel_joint"
     type="continuous">
@@ -347,6 +378,8 @@
     <axis
       xyz="0 0 1" />
   </joint>
+
+
   <link
     name="Right_arm">
     <inertial>
@@ -382,6 +415,8 @@
       </geometry>
     </collision>
   </link>
+
+
   <joint
     name="Right_arm_joint"
     type="fixed">
@@ -395,6 +430,8 @@
     <axis
       xyz="0 0 0" />
   </joint>
+
+
   <link
     name="RF_stering_arm">
     <inertial>
@@ -421,6 +458,8 @@
       </geometry>
     </visual>
   </link>
+
+
   <joint
     name="RF_stering_arm_joint"
     type="continuous">
@@ -434,6 +473,8 @@
     <axis
       xyz="0 1 0" />
   </joint>
+
+
   <link
     name="RF_wheel">
     <inertial>
@@ -477,6 +518,8 @@
       </surface> 
     </collision>
   </link>
+  
+
   <joint
     name="RF_wheel_joint"
     type="continuous">
@@ -490,6 +533,8 @@
     <axis
       xyz="0 0 -1" />
   </joint>
+
+
   <link
     name="RR_stering_arm">
     <inertial>
@@ -516,6 +561,8 @@
       </geometry>
     </visual>
   </link>
+
+
   <joint
     name="RR_stering_arm_joint"
     type="continuous">
@@ -529,6 +576,8 @@
     <axis
       xyz="0 1 0" />
   </joint>
+
+
   <link
     name="RR_wheel">
     <inertial>
@@ -572,6 +621,8 @@
       </surface> 
     </collision>
   </link>
+
+
   <joint
     name="RR_wheel_joint"
     type="continuous">
@@ -585,6 +636,8 @@
     <axis
       xyz="0 0 -1" />
   </joint>
+
+
 
   <!-- Sensors Links and Joints-->
 
@@ -605,6 +658,83 @@
         izz="0" />
     </inertial>
   </link>
+
+
+
+  <!-- Aqui está o problema do Lidar -->
+
+
+  <joint name="lidar_joint" type="fixed">
+    <origin xyz="-0.03 -0.095 0" rpy="1.5707 0 0"/>
+    <parent link="base_link"/>
+    <child link="lidar_link"/>
+    <axis xyz="0 0 1" rpy = "0 0 0 "/>
+  </joint>
+
+
+  <link name="lidar_link">
+
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <cylinder  length="0.02" radius="0.03"/>
+      </geometry>
+    </visual>
+
+    <collision name = "lidar_collision">
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <cylinder radius="0.1" length="0.1"/>
+      </geometry>
+    </collision>
+
+    <inertial>
+      <mass value="1e-6"/>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <inertia ixx="0.001"  ixy="0"  ixz="0" 
+              iyy="0.001" iyz="0" izz="0.001" />
+    </inertial>
+
+  </link>
+
+
+  <!-- 
+  <gazebo reference="lidar_link">
+    <sensor name="lidar" type="ray">
+      <always_on>true</always_on>
+      <visualize>true</visualize>
+      <update_rate>5</update_rate>
+      <ray>
+        <scan>
+          <horizontal>
+            <samples>360</samples>
+            <resolution>1.000000</resolution>
+            <min_angle>0.000000</min_angle>
+            <max_angle>6.280000</max_angle>
+          </horizontal>
+        </scan>
+        <range>
+          <min>0.120000</min>
+          <max>3.5</max>
+          <resolution>0.015000</resolution>
+        </range>
+        <noise>
+          <type>gaussian</type>
+          <mean>0.0</mean>
+          <stddev>0.01</stddev>
+        </noise>
+      </ray>
+      <plugin name="scan" filename="libgazebo_ros_ray_sensor.so">
+        <ros>
+          <remapping>~/out:=scan</remapping>
+        </ros>
+        <output_type>sensor_msgs/LaserScan</output_type>
+        <frame_name>lidar_link</frame_name>
+      </plugin>
+    </sensor>
+  </gazebo> -->
+
+
   <joint
     name="imu_joint"
     type="fixed">
@@ -618,6 +748,7 @@
     <axis
       xyz="0 0 0" />
   </joint>
+
 
   <link
     name="odom_gz_link">
@@ -636,6 +767,8 @@
         izz="0" />
     </inertial>
   </link>
+
+
   <joint
     name="odom_gz_joint"
     type="fixed">
@@ -649,5 +782,6 @@
     <axis
       xyz="0 0 0" />
   </joint>
+
 
 </robot>

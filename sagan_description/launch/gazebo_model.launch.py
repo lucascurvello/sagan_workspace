@@ -46,16 +46,7 @@ def generate_launch_description():
         parameters=[{'use_sim_time': True}]
     )
 
-    spawnModelNodeGazebo = Node(
-        package="ros_gz_sim",
-        executable="create",
-        arguments=[
-            "-name", robotXacroName,
-            "-topic", "robot_description", 
-            "-z", "1"
-        ],
-        output="screen",        
-    )
+
     
     diff_drive_base_controller_spawner = Node(
         package='controller_manager',
@@ -85,7 +76,8 @@ def generate_launch_description():
         package="joint_state_publisher",
         executable="joint_state_publisher",
         output="screen",
-        parameters=[{"robot_description": robotDescription, "use_sim_time": True, 'rate': 100}]
+        parameters=[{"robot_description": robotDescription,
+                      "use_sim_time": True, 'rate': 100}]
     )
 
     nodeSaganOdometry = Node(
@@ -101,6 +93,17 @@ def generate_launch_description():
         name='ekf_filter_node',
         output='screen',
         parameters=[os.path.join(get_package_share_directory("sagan_description"), "parameters/sagan_ekf.yaml"), {"use_sim_time": True}],
+    )
+
+    spawnModelNodeGazebo = Node(
+        package="ros_gz_sim",
+        executable="create",
+        arguments=[
+            "-name", robotXacroName,
+            "-topic", "robot_description", 
+            "-z", "1"
+        ],
+        output="screen",        
     )
 
 
@@ -136,6 +139,7 @@ def generate_launch_description():
     launchDescriptionObject.add_action(nodeSaganEfk)
     launchDescriptionObject.add_action(rviz_node)
     launchDescriptionObject.add_action(nodeJointStatePublisher)
+    
     return launchDescriptionObject
     
     
