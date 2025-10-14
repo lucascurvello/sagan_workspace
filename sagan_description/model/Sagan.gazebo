@@ -82,6 +82,7 @@
     </gazebo> -->
 
     <gazebo reference="lidar_link">
+        <material>Gazebo/Gray</material>
         <sensor name ="gpu_lidar" type="gpu_lidar">
             <pose relative_to='lidar_link'>0 0 0 0 0 0</pose>
 
