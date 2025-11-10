@@ -7,20 +7,19 @@
   <xacro:include filename="$(find sagan_description)/model/Sagan.gazebo"/>
   <xacro:include filename="$(find sagan_description)/model/ros2_control.xacro"/>
 
+  <link name="odom"></link>
   
-  <link name="odom"></link> 
-   
   <link name="efk_reference"></link>
 
   <link name="noise_odometry"> </link>
 
   <!--
    <link name="world"/>
-  <joint name="world_to_odom" type="continuous">
-        <parent link="world"/>
-        <child link="odom"/>
-        <origin xyz="0 0 1" rpy="0 0 0"/>
-  </joint>  
+   <joint name="world_to_odom" type="continuous">
+     <parent link="world"/>
+     <child link="odom"/>
+     <origin xyz="0 0 1" rpy="0 0 0"/>
+   </joint>  
   -->
   
   <!--<link name="base_footprint"></link>
@@ -31,11 +30,12 @@
   -->
 
   <link name="gz_reference"></link>
+  
   <joint name="odom_gz_reference_joint" type="fixed">
-        <parent link="odom"/>
-        <child link="gz_reference"/>
-  </joint> 
-
+    <parent link="odom"/>
+    <child link="gz_reference"/>
+  </joint>
+  
   <joint name="odom_efk_joint" type="fixed">
         <parent link="odom"/>
         <child link="efk_reference"/>
@@ -51,16 +51,16 @@
   <link name="base_footprint"></link>
   
   <joint name="odom_to_base_footprint" type="fixed">
-        <parent link="odom"/>
-        <child link="base_footprint"/>
-        <origin xyz="0 0 0" rpy="0 0 0"/>
-  </joint> 
-
+    <parent link="odom"/>
+    <child link="base_footprint"/>
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+  </joint>
+  
   <joint name="base_footprint_joint" type="fixed">
     <origin xyz="0 0 0.017" rpy="-1.5708 0 0" />
     <parent link="base_footprint" />
     <child link="base_link" />
- </joint>
+  </joint>
   
   <xacro:property name="m_base" value="5.0"/>
   <xacro:property name="m_wheel" value="0.5"/>
@@ -85,40 +85,25 @@
   <link
     name="base_link">
     <inertial>
-      <origin
-        xyz="0 0 0"
-        rpy="0 0 0" />
-      <mass
-        value="${m_base}" />
-      <inertia
-        ixx="${Ix_body}"
-        ixy="0.0"
-        ixz="0.0"
-        iyy="${Iy_body}"
-        iyz="0.0"
-        izz="${Iz_body}" />
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <mass value="${m_base}" />
+      <inertia ixx="${Ix_body}" ixy="0.0" ixz="0.0" iyy="${Iy_body}" iyz="0.0" izz="${Iz_body}" />
     </inertial>
     <visual>
-      <origin
-        xyz="0 0 0"
-        rpy="0 0 0" />
+      <origin xyz="0 0 0" rpy="0 0 0" />
       <geometry>
-        <mesh
-          filename="file://$(find sagan_description)/model/meshes/base_link.STL" />
+        <mesh filename="file://$(find sagan_description)/model/meshes/base_link.STL" />
       </geometry>
     </visual>
     <collision>
-      <origin
-        xyz="0 0 0"
-        rpy="0 0 0" />
+      <origin xyz="0 0 0" rpy="0 0 0" />
       <geometry>
-        <mesh
-          filename="file://$(find sagan_description)/model/meshes/base_link.STL" />
+        <mesh filename="file://$(find sagan_description)/model/meshes/base_link.STL" />
       </geometry>
     </collision>
   </link>
-  <link
-    name="Left_arm">
+  
+  <link name="Left_arm">
     <inertial>
       <origin
         xyz="-4.91680069401867E-07 -0.0215734283000623 0.030428242121529"
@@ -134,39 +119,27 @@
         izz="0.0000000001" />
     </inertial>
     <visual>
-      <origin
-        xyz="0 0 0"
-        rpy="0 0 0" />
+      <origin xyz="0 0 0" rpy="0 0 0" />
       <geometry>
-        <mesh
-          filename="file://$(find sagan_description)/model/meshes/Left_arm.STL" />
+        <mesh filename="file://$(find sagan_description)/model/meshes/Left_arm.STL" />
       </geometry>
     </visual>
     <collision>
-      <origin
-        xyz="0 0 0"
-        rpy="0 0 0" />
+      <origin xyz="0 0 0" rpy="0 0 0" />
       <geometry>
-        <mesh
-          filename="file://$(find sagan_description)/model/meshes/Left_arm.STL" />
+        <mesh filename="file://$(find sagan_description)/model/meshes/Left_arm.STL" />
       </geometry>
     </collision>
   </link>
-  <joint
-    name="Left_arm_joint"
-    type="fixed">
-    <origin
-      xyz="-0.015 -0.022 -0.1425"
-      rpy="3.1416 0 0" />
-    <parent
-      link="base_link" />
-    <child
-      link="Left_arm" />
-    <axis
-      xyz="0 0 0" />
+  
+  <joint name="Left_arm_joint" type="fixed">
+    <origin xyz="-0.015 -0.022 -0.1425" rpy="3.1416 0 0" />
+    <parent link="base_link" />
+    <child link="Left_arm" />
+    <axis xyz="0 0 0" />
   </joint>
-  <link
-    name="LF_stering_arm">
+  
+  <link name="LF_stering_arm">
     <inertial>
       <origin
         xyz="-0.00804072955706647 -0.106038395307323 0.00274977981157196"
@@ -182,30 +155,21 @@
         izz="0.0"/>
     </inertial>
     <visual>
-      <origin
-        xyz="0 0 0"
-        rpy="0 0 0" />
+      <origin xyz="0 0 0" rpy="0 0 0" />
       <geometry>
-        <mesh
-          filename="file://$(find sagan_description)/model/meshes/LF_stering_arm.STL" />
+        <mesh filename="file://$(find sagan_description)/model/meshes/LF_stering_arm.STL" />
       </geometry>
     </visual>
   </link>
-  <joint
-    name="LF_stering_arm_joint"
-    type="continuous">
-    <origin
-      xyz="-0.185 -0.031 0.04225"
-      rpy="0 -1.5708 0" />
-    <parent
-      link="Left_arm" />
-    <child
-      link="LF_stering_arm" />
-    <axis
-      xyz="0 1 0" />
+  
+  <joint name="LF_stering_arm_joint" type="continuous">
+    <origin xyz="-0.185 -0.031 0.04225" rpy="0 -1.5708 0" />
+    <parent link="Left_arm" />
+    <child link="LF_stering_arm" />
+    <axis xyz="0 1 0" />
   </joint>
-  <link
-    name="LF_wheel">
+  
+  <link name="LF_wheel">
     <inertial>
       <origin
         xyz="3.09746851944182E-05 7.3094613101371E-05 -0.00572970837480286"
@@ -221,38 +185,27 @@
         izz="${Iz_wheel}" />
     </inertial>
     <visual>
-      <origin
-        xyz="0 0 0"
-        rpy="0 0 0" />
+      <origin xyz="0 0 0" rpy="0 0 0" />
       <geometry>
-        <mesh
-          filename="file://$(find sagan_description)/model/meshes/LF_wheel.STL" />
+        <mesh filename="file://$(find sagan_description)/model/meshes/LF_wheel.STL" />
       </geometry>
     </visual>
     <collision>
-      <origin
-        xyz="0 0 0"
-        rpy="0 0 0" />
+      <origin xyz="0 0 0" rpy="0 0 0" />
       <geometry>
         <sphere radius="0.06" />
       </geometry>  
     </collision>
   </link>
-  <joint
-    name="LF_wheel_joint"
-    type="continuous">
-    <origin
-      xyz="0 -0.1325 0"
-      rpy="1.5708 -0.27463 -1.5708" />
-    <parent
-      link="LF_stering_arm" />
-    <child
-      link="LF_wheel" />
-    <axis
-      xyz="0 0 1" />
+  
+  <joint name="LF_wheel_joint" type="continuous">
+    <origin xyz="0 -0.1325 0" rpy="1.5708 -0.27463 -1.5708" />
+    <parent link="LF_stering_arm" />
+    <child link="LF_wheel" />
+    <axis xyz="0 0 1" />
   </joint>
-  <link
-    name="LR_stering_arm">
+  
+  <link name="LR_stering_arm">
     <inertial>
       <origin
         xyz="0.00804071716967378 -0.106038396919281 0.00274978112621285"
@@ -268,30 +221,21 @@
         izz="0.0" />
     </inertial>
     <visual>
-      <origin
-        xyz="0 0 0"
-        rpy="0 0 0" />
+      <origin xyz="0 0 0" rpy="0 0 0" />
       <geometry>
-        <mesh
-          filename="file://$(find sagan_description)/model/meshes/LR_stering_arm.STL" />
+        <mesh filename="file://$(find sagan_description)/model/meshes/LR_stering_arm.STL" />
       </geometry>
     </visual>
   </link>
-  <joint
-    name="LR_stering_arm_joint"
-    type="continuous">
-    <origin
-      xyz="0.185 -0.031 0.04225"
-      rpy="0 1.5708 0" />
-    <parent
-      link="Left_arm" />
-    <child
-      link="LR_stering_arm" />
-    <axis
-      xyz="0 1 0" />
+  
+  <joint name="LR_stering_arm_joint" type="continuous">
+    <origin xyz="0.185 -0.031 0.04225" rpy="0 1.5708 0" />
+    <parent link="Left_arm" />
+    <child link="LR_stering_arm" />
+    <axis xyz="0 1 0" />
   </joint>
-  <link
-    name="LR_wheel">
+  
+  <link name="LR_wheel">
     <inertial>
       <origin
         xyz="3.0974725421351E-05 7.30947612943567E-05 -0.00572970824386257"
@@ -307,38 +251,27 @@
         izz="${Iz_wheel}" />
     </inertial>
     <visual>
-      <origin
-        xyz="0 0 0"
-        rpy="0 0 0" />
+      <origin xyz="0 0 0" rpy="0 0 0" />
       <geometry>
-        <mesh
-          filename="file://$(find sagan_description)/model/meshes/LR_wheel.STL" />
+        <mesh filename="file://$(find sagan_description)/model/meshes/LR_wheel.STL" />
       </geometry>
     </visual>
     <collision>
-      <origin
-        xyz="0 0 0"
-        rpy="0 0 0" />
+      <origin xyz="0 0 0" rpy="0 0 0" />
       <geometry>
         <sphere radius="0.06" />
       </geometry> 
     </collision>
   </link>
-  <joint
-    name="LR_wheel_joint"
-    type="continuous">
-    <origin
-      xyz="0 -0.1325 0"
-      rpy="-1.5708 -0.58509 -1.5708" />
-    <parent
-      link="LR_stering_arm" />
-    <child
-      link="LR_wheel" />
-    <axis
-      xyz="0 0 1" />
+  
+  <joint name="LR_wheel_joint" type="continuous">
+    <origin xyz="0 -0.1325 0" rpy="-1.5708 -0.58509 -1.5708" />
+    <parent link="LR_stering_arm" />
+    <child link="LR_wheel" />
+    <axis xyz="0 0 1" />
   </joint>
-  <link
-    name="Right_arm">
+  
+  <link name="Right_arm">
     <inertial>
       <origin
         xyz="-4.99004084572249E-07 -0.0215734369148283 0.0304282452153999"
@@ -354,39 +287,27 @@
         izz="0.0" />
     </inertial>
     <visual>
-      <origin
-        xyz="0 0 0"
-        rpy="0 0 0" />
+      <origin xyz="0 0 0" rpy="0 0 0" />
       <geometry>
-        <mesh
-          filename="file://$(find sagan_description)/model/meshes/Right_arm.STL" />
+        <mesh filename="file://$(find sagan_description)/model/meshes/Right_arm.STL" />
       </geometry>
     </visual>
     <collision>
-      <origin
-        xyz="0 0 0"
-        rpy="0 0 0" />
+      <origin xyz="0 0 0" rpy="0 0 0" />
       <geometry>
-        <mesh
-          filename="file://$(find sagan_description)/model/meshes/Right_arm.STL" />
+        <mesh filename="file://$(find sagan_description)/model/meshes/Right_arm.STL" />
       </geometry>
     </collision>
   </link>
-  <joint
-    name="Right_arm_joint"
-    type="fixed">
-    <origin
-      xyz="-0.015 -0.022 0.143"
-      rpy="0 0 3.1416" />
-    <parent
-      link="base_link" />
-    <child
-      link="Right_arm" />
-    <axis
-      xyz="0 0 0" />
+  
+  <joint name="Right_arm_joint" type="fixed">
+    <origin xyz="-0.015 -0.022 0.143" rpy="0 0 3.1416" />
+    <parent link="base_link" />
+    <child link="Right_arm" />
+    <axis xyz="0 0 0" />
   </joint>
-  <link
-    name="RF_stering_arm">
+  
+  <link name="RF_stering_arm">
     <inertial>
       <origin
         xyz="0.00804071712769167 -0.106038397059761 0.00274978119970537"
@@ -402,30 +323,21 @@
         izz="0.0" />
     </inertial>
     <visual>
-      <origin
-        xyz="0 0 0"
-        rpy="0 0 0" />
+      <origin xyz="0 0 0" rpy="0 0 0" />
       <geometry>
-        <mesh
-          filename="file://$(find sagan_description)/model/meshes/RF_stering_arm.STL" />
+        <mesh filename="file://$(find sagan_description)/model/meshes/RF_stering_arm.STL" />
       </geometry>
     </visual>
   </link>
-  <joint
-    name="RF_stering_arm_joint"
-    type="continuous">
-    <origin
-      xyz="0.185 -0.031 0.04225"
-      rpy="3.1416 1.5708 3.1416" />
-    <parent
-      link="Right_arm" />
-    <child
-      link="RF_stering_arm" />
-    <axis
-      xyz="0 1 0" />
+  
+  <joint name="RF_stering_arm_joint" type="continuous">
+    <origin xyz="0.185 -0.031 0.04225" rpy="3.1416 1.5708 3.1416" />
+    <parent link="Right_arm" />
+    <child link="RF_stering_arm" />
+    <axis xyz="0 1 0" />
   </joint>
-  <link
-    name="RF_wheel">
+  
+  <link name="RF_wheel">
     <inertial>
       <origin
         xyz="3.09746486688856E-05 7.30947746340888E-05 -0.00572970830710698"
@@ -441,38 +353,27 @@
         izz="${Iz_wheel}" />
     </inertial>
     <visual>
-      <origin
-        xyz="0 0 0"
-        rpy="0 0 0" />
+      <origin xyz="0 0 0" rpy="0 0 0" />
       <geometry>
-        <mesh
-          filename="file://$(find sagan_description)/model/meshes/RF_wheel.STL" />
+        <mesh filename="file://$(find sagan_description)/model/meshes/RF_wheel.STL" />
       </geometry>
     </visual>
     <collision>
-      <origin
-        xyz="0 0 0"
-        rpy="0 0 0" />
+      <origin xyz="0 0 0" rpy="0 0 0" />
       <geometry>
         <sphere radius="0.06" />
       </geometry>  
     </collision>
   </link>
-  <joint
-    name="RF_wheel_joint"
-    type="continuous">
-    <origin
-      xyz="0 -0.1325 0"
-      rpy="1.5708 1.433 1.5708" />
-    <parent
-      link="RF_stering_arm" />
-    <child
-      link="RF_wheel" />
-    <axis
-      xyz="0 0 -1" />
+  
+  <joint name="RF_wheel_joint" type="continuous">
+    <origin xyz="0 -0.1325 0" rpy="1.5708 1.433 1.5708" />
+    <parent link="RF_stering_arm" />
+    <child link="RF_wheel" />
+    <axis xyz="0 0 -1" />
   </joint>
-  <link
-    name="RR_stering_arm">
+  
+  <link name="RR_stering_arm">
     <inertial>
       <origin
         xyz="-0.00804072936541492 -0.106038394646613 0.0027497797661836"
@@ -488,30 +389,21 @@
         izz="0.0" />
     </inertial>
     <visual>
-      <origin
-        xyz="0 0 0"
-        rpy="0 0 0" />
+      <origin xyz="0 0 0" rpy="0 0 0" />
       <geometry>
-        <mesh
-          filename="file://$(find sagan_description)/model/meshes/RR_stering_arm.STL" />
+        <mesh filename="file://$(find sagan_description)/model/meshes/RR_stering_arm.STL" />
       </geometry>
     </visual>
   </link>
-  <joint
-    name="RR_stering_arm_joint"
-    type="continuous">
-    <origin
-      xyz="-0.185 -0.031 0.04225"
-      rpy="0 -1.5708 0" />
-    <parent
-      link="Right_arm" />
-    <child
-      link="RR_stering_arm" />
-    <axis
-      xyz="0 1 0" />
+  
+  <joint name="RR_stering_arm_joint" type="continuous">
+    <origin xyz="-0.185 -0.031 0.04225" rpy="0 -1.5708 0" />
+    <parent link="Right_arm" />
+    <child link="RR_stering_arm" />
+    <axis xyz="0 1 0" />
   </joint>
-  <link
-    name="RR_wheel">
+  
+  <link name="RR_wheel">
     <inertial>
       <origin
         xyz="3.09745679317186E-05 7.30948701842954E-05 -0.0057297082584184"
@@ -527,41 +419,29 @@
         izz="${Iz_wheel}" />
     </inertial>
     <visual>
-      <origin
-        xyz="0 0 0"
-        rpy="0 0 0" />
+      <origin xyz="0 0 0" rpy="0 0 0" />
       <geometry>
-        <mesh
-          filename="file://$(find sagan_description)/model/meshes/RR_wheel.STL" />
+        <mesh filename="file://$(find sagan_description)/model/meshes/RR_wheel.STL" />
       </geometry>
     </visual>
     <collision>
-      <origin
-        xyz="0 0 0"
-        rpy="0 0 0" />
+      <origin xyz="0 0 0" rpy="0 0 0" />
       <geometry>
         <sphere radius="0.06" />
       </geometry> 
     </collision>
   </link>
-  <joint
-    name="RR_wheel_joint"
-    type="continuous">
-    <origin
-      xyz="0 -0.1325 0"
-      rpy="1.5708 -1.3763 -1.5708" />
-    <parent
-      link="RR_stering_arm" />
-    <child
-      link="RR_wheel" />
-    <axis
-      xyz="0 0 -1" />
+  
+  <joint name="RR_wheel_joint" type="continuous">
+    <origin xyz="0 -0.1325 0" rpy="1.5708 -1.3763 -1.5708" />
+    <parent link="RR_stering_arm" />
+    <child link="RR_wheel" />
+    <axis xyz="0 0 -1" />
   </joint>
 
   <!-- Sensors Links and Joints-->
 
-  <link
-    name="imu_link">
+  <link name="imu_link">
     <inertial>
       <origin
         xyz="0 0 0"
@@ -577,22 +457,48 @@
         izz="0.0000000001" />
     </inertial>
   </link>
-  <joint
-    name="imu_joint"
-    type="fixed">
-    <origin
-      xyz="0 0 0"
-      rpy="-1.5708 0 3.1415"/>
-    <parent
-      link="base_link" />
-    <child
-      link="imu_link" />
-    <axis
-      xyz="0 0 0" />
+  
+  <joint name="imu_joint" type="fixed">
+    <origin xyz="0 0 0" rpy="-1.5708 0 3.1415"/>
+    <parent link="base_link" />
+    <child link="imu_link" />
+    <axis xyz="0 0 0" />
   </joint>
 
-  <link
-    name="odom_gz_link">
+  <joint name="lidar_joint" type="fixed">
+    <origin xyz="-0.03 -0.095 0" rpy="1.5707 0 0"/>
+    <parent link="base_link"/>
+    <child link="lidar_link"/>
+    <axis xyz="0 0 1" rpy = "0 0 0 "/>
+  </joint>
+
+
+  <link name="lidar_link">
+
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <cylinder  length="0.02" radius="0.03"/>
+      </geometry>
+    </visual>
+
+    <collision name = "lidar_collision">
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <cylinder radius="0.1" length="0.1"/>
+      </geometry>
+    </collision>
+
+    <inertial>
+      <mass value="1e-6"/>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <inertia ixx="0.001"  ixy="0"  ixz="0" 
+              iyy="0.001" iyz="0" izz="0.001" />
+    </inertial>
+
+  </link>
+
+  <link name="odom_gz_link">
     <inertial>
       <origin
         xyz="0 0 0"
@@ -608,6 +514,7 @@
         izz="0.0000000001" />
     </inertial>
   </link>
+
   <joint
     name="odom_gz_joint"
     type="fixed">
