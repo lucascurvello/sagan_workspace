@@ -42,8 +42,8 @@ private:
 
         // --- Inverse Kinematics Calculation ---
         // See Python file for detailed formula explanation.
-        double right_wheel_vel = (linear_vel + (angular_vel * wheel_separation_ / 2.0)) / wheel_radius_;
-        double left_wheel_vel = (linear_vel - (angular_vel * wheel_separation_ / 2.0)) / wheel_radius_;
+        double left_wheel_vel = (linear_vel + (angular_vel * wheel_separation_ / 2.0)) / wheel_radius_;
+        double right_wheel_vel = (linear_vel - (angular_vel * wheel_separation_ / 2.0)) / wheel_radius_;
 
         auto message = sagan_interfaces::msg::SaganCmd();
         
